@@ -1,9 +1,9 @@
-"""Entry point for the Supernova Catalog
+"""Entry point for the Hypervelocity Catalog
 """
 
 
 def main(args, clargs, log):
-    from .supernovacatalog import SupernovaCatalog
+    from .hypervelocitycatalog import HypervelocityCatalog
     from astrocats.catalog.argshandler import ArgsHandler
 
     # Create an `ArgsHandler` instance with the appropriate argparse machinery
@@ -15,8 +15,8 @@ def main(args, clargs, log):
     if args is None:
         return
 
-    log.debug("Initializing `SupernovaCatalog`")
-    catalog = SupernovaCatalog(args, log)
+    log.debug("Initializing `HypervelocityCatalog`")
+    catalog = HypervelocityCatalog(args, log)
 
     # Run the subcommand given in `args`
     log.debug("Running subcommand")
