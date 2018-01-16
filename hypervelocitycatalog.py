@@ -1,4 +1,4 @@
-"""Supernovae specific catalog class."""
+"""Hypervelocity specific catalog class."""
 import codecs
 import json
 import os
@@ -10,12 +10,12 @@ from astrocats.catalog.catalog import Catalog
 from astrocats.catalog.quantity import QUANTITY
 from astrocats.catalog.utils import read_json_arr, read_json_dict
 
-from .supernova import SUPERNOVA, Supernova
-from .utils import name_clean
+from .hypervelocity import HYPERVELOCITY, Hypervelocity
+#from .utils import name_clean
 
 
-class SupernovaCatalog(Catalog):
-    """Catalog class for `Supernova` objects."""
+class HypervelocityCatalog(Catalog):
+    """Catalog class for `Hypervelocity` objects."""
 
     class PATHS(Catalog.PATHS):
         """Paths to catalog inputs/outputs."""
@@ -24,7 +24,7 @@ class SupernovaCatalog(Catalog):
 
         def __init__(self, catalog):
             """Initialize paths."""
-            super(SupernovaCatalog.PATHS, self).__init__(catalog)
+            super(HypervelocityCatalog.PATHS, self).__init__(catalog)
             # auxiliary datafiles
             self.TYPE_SYNONYMS = os.path.join(
                 self.PATH_INPUT, 'type-synonyms.json')
@@ -57,18 +57,18 @@ class SupernovaCatalog(Catalog):
     class SCHEMA(object):
         """Define the HASH/URL associated with the present schema."""
 
-        HASH = (check_output(['git', '-C', 'astrocats/supernovae',
+        HASH = (check_output(['git', '-C', 'hypervelocity',
                               'log', '-n', '1', '--format="%h"',
                               '--', 'SCHEMA.md'])
                 .decode('ascii').strip().strip('"').strip())
-        URL = ('https://github.com/astrocatalogs/supernovae/blob/' + HASH +
+        URL = ('https://github.com/DouglasBoubert/hypervelocity/blob/' + HASH +
                '/SCHEMA.md')
 
     def __init__(self, args, log):
         """Initialize catalog."""
         # Initialize super `astrocats.catalog.catalog.Catalog` object
-        super(SupernovaCatalog, self).__init__(args, log)
-        self.proto = Supernova
+        super(HypervelocityCatalog, self).__init__(args, log)
+        self.proto = Hypervelocity
         self._load_aux_data()
         return
 
@@ -77,8 +77,10 @@ class SupernovaCatalog(Catalog):
 
         An entry would be buried if it does not belong to the class of object
         associated with the given catalog.
+        
+        FIX: needs heavy updating
         """
-        (bury_entry, save_entry) = super(SupernovaCatalog, self).should_bury(name)
+        (bury_entry, save_entry) = super(HypervelocityCatalog, self).should_bury(name)
 
         ct_val = None
         if name.startswith(tuple(self.nonsneprefixes_dict)):
@@ -137,16 +139,11 @@ class SupernovaCatalog(Catalog):
         self.bibauthor_dict = read_json_dict(self.PATHS.BIBAUTHORS)
         self.biberror_dict = read_json_dict(self.PATHS.BIBERRORS)
         self.extinctions_dict = read_json_dict(self.PATHS.EXTINCT)
-        self.iaucs_dict = read_json_dict(self.PATHS.IAUCS)
-        self.cbets_dict = read_json_dict(self.PATHS.CBETS)
-        self.atels_dict = read_json_dict(self.PATHS.ATELS)
         self.source_syns = read_json_dict(self.PATHS.SOURCE_SYNONYMS)
         self.url_redirs = read_json_dict(self.PATHS.URL_REDIRECTS)
         self.type_syns = read_json_dict(self.PATHS.TYPE_SYNONYMS)
         # Create/Load auxiliary arrays
-        self.nonsneprefixes_dict = read_json_arr(
-            self.PATHS.NON_SNE_PREFIXES)
-        self.nonsnetypes = read_json_arr(self.PATHS.NON_SNE_TYPES)
+        #self.nonsnetypes = read_json_arr(self.PATHS.NON_SNE_TYPES)
         return
 
     def save_caches(self):
