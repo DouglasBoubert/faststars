@@ -1,4 +1,4 @@
-"""The Supernova AstroCatalog.
+"""The Hypervelocity AstroCatalog.
 """
 
 # from . import supernova
