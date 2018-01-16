@@ -1,5 +1,5 @@
 """The Hypervelocity AstroCatalog.
 """
 
-# from . import supernova
+# from . import hypervelocity
 from . import main
