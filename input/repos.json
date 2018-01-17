@@ -6,7 +6,8 @@
         "hypervelocity_boneyard"
     ],
     "external":[
-        "hypervelocity_external"
+        "hypervelocity_external",
+        "hypervelocity_contributed"
     ],
     "private":[
         "hypervelocity_private"
