@@ -1,6 +1,8 @@
-This document describes the standard Open Supernova Catalog (OSC) JSON format. For JSON files in this repository, which are mostly entered by hand (often via the edit icon on the main table page) or via direct data donations, our format requirements are less strict than usual, for instance if you forget to set a supernova's name field, our import script is smart enough to do this for you. As JSON is a sparse format, object names that don't follow our default name choices will simply be ignored by the script. In most cases, this is not desirable as you will want your data to be readable by the catalog import script, but it can be useful for adding new objects that may be unique to your dataset, which in the future could be parsed by the catalog. But so long as you are only adding standard data to a supernova, it is best to follow the guidelines set in this document as closely as possible to avoid potential issues.
+This document is an edited version of the Open Supernova Catalog (OSC) schema found at https://github.com/astrocatalogs/supernovae/blob/934f3526a4ea505d9e1f9f01435b65e712b028c2/SCHEMA.md
 
-Each supernova is contained with a single JSON file that contains a single object bearing the supernova's primary name, which when empty represents the minimum readable entry file:
+This document describes the standard Open Hypervelocity Catalog (OHC) JSON format. For JSON files in this repository, which are mostly entered by hand (often via the edit icon on the main table page) or via direct data donations, our format requirements are less strict than usual, for instance if you forget to set a hypervelocity star's name field, our import script is smart enough to do this for you. As JSON is a sparse format, object names that don't follow our default name choices will simply be ignored by the script. In most cases, this is not desirable as you will want your data to be readable by the catalog import script, but it can be useful for adding new objects that may be unique to your dataset, which in the future could be parsed by the catalog. But so long as you are only adding standard data to a supernova, it is best to follow the guidelines set in this document as closely as possible to avoid potential issues.
+
+Each hypervelocity star is contained with a single JSON file that contains a single object bearing the hypervelocity star's primary name, which when empty represents the minimum readable entry file:
 
 ```JSON
 {
@@ -95,7 +97,7 @@ Data quantities their own set of standard fields:
 | `model` | A list of integer aliases of which models the data orignated from | yes
 | `realization` | A numeric ID for the realization of the denoted model (e.g. from Monte Carlo) | yes
 
-Currently, the OSC explicitly tracks the following quantities for each supernova, if available (items marked with a 🌟 are supernova-specific):
+Currently, the OSC explicitly tracks the following quantities for each supernova, if available (items marked with a 🌟 are hypervelocity-specific):
 
 | Quantity | Description | Kinds
 | :--- | :--- | :---
@@ -106,15 +108,10 @@ Currently, the OSC explicitly tracks the following quantities for each supernova
 | `dec` | Declination of event in degrees |
 | `discoverdate` | Date that the event was first observed 🌟 |
 | `maxdate` | Date of the event's maximum light |
-| `maxvisualabsmag` | Maximum visual absolute magnitude 🌟 |
-| `maxvisualappmag` | Maximum visual apparent magnitude 🌟 |
-| `maxvisualband` | Band of maximum visual magnitude 🌟 |
-| `maxvisualdate` | Date of maximum visual magnitude 🌟 |
 | `redshift` | Redshift of event or its host in various frames | `heliocentric`, `cmb`, `host`
 | `lumdist` | Luminosity distance to the event |
 | `comovingdist` | Comoving distance to the event |
 | `velocity` | Recessional velocity of event | `heliocentric`, `cmb`, `host`
-| `claimedtype` | Claimed type of the event 🌟 |
 | `discoverer` | Person(s)/survey(s) who discovered the event |
 | `ebv` | Reddening originating from the Milky Way |
 | `host` | Host galaxy of the event |
@@ -211,4 +208,4 @@ And finally for spectra, these fields are used:
 | `exclude` | Suggested wavelengths (in &#8491;) to exclude when plotting/analyzing, can be `above`, `below`, or `range`, e.g. `"above":"10000"` would suggested excluding data from wavelengths greater than 10,000 &#8491;, `"range":["8000","8100"]` would suggested excluding data from wavelengths in between 8,000 and 8,100 &#8491; | yes
 | `source` | A list of integer aliases to sources for the data | no
 
-So long as it is reasonable, the OSC is open to adding more field names should additional information need to be stored in an event file beyond the quantities and data we have chosen to track here, please contact us and let us know if you have any suggestions on how the standard format can be improved.
+So long as it is reasonable, the OHC is open to adding more field names should additional information need to be stored in an event file beyond the quantities and data we have chosen to track here, please contact us and let us know if you have any suggestions on how the standard format can be improved.
