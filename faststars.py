@@ -22,8 +22,9 @@ from six import string_types
 
 class FASTSTARS(ENTRY):
     """FastStars `Key` child class."""
-    PROPER_MOTION_RA = Key('propermotionra', KEY_TYPES.NUMERIC)
-    PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC)
+    DISCOVERY_DATE = Key('discoverdate', KEY_TYPES.STRING)
+    PROPER_MOTION_RA = Key('propermotionra', KEY_TYPES.NUMERIC,replace_better=True)
+    PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC,replace_better=True)
     #EXPLOSION_DATE = Key('explosiondate', KEY_TYPES.STRING)
     #MAX_VISUAL_ABS_MAG = Key('maxvisualabsmag', KEY_TYPES.NUMERIC)
     #MAX_VISUAL_APP_MAG = Key('maxvisualappmag', KEY_TYPES.NUMERIC)
@@ -31,7 +32,7 @@ class FASTSTARS(ENTRY):
     #MAX_VISUAL_DATE = Key('maxvisualdate',
     #                      KEY_TYPES.STRING,
     #                      replace_better=True)
-    #ERRORS = Key('errors')
+    ERRORS = Key('errors')
 
 
 class FastStars(Entry):

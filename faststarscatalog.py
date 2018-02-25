@@ -32,14 +32,7 @@ class FastStarsCatalog(Catalog):
                 self.PATH_INPUT, 'source-synonyms.json')
             self.URL_REDIRECTS = os.path.join(
                 self.PATH_INPUT, 'url-redirects.json')
-            self.NON_SNE_TYPES = os.path.join(
-                self.PATH_INPUT, 'non-sne-types.json')
-            self.NON_SNE_PREFIXES = os.path.join(
-                self.PATH_INPUT, 'non-sne-prefixes.json')
             self.BIBERRORS = os.path.join(self.PATH_INPUT, 'biberrors.json')
-            self.ATELS = os.path.join(self.PATH_INPUT, 'atels.json')
-            self.CBETS = os.path.join(self.PATH_INPUT, 'cbets.json')
-            self.IAUCS = os.path.join(self.PATH_INPUT, 'iaucs.json')
             # cached datafiles
             self.BIBAUTHORS = os.path.join(
                 self.PATH_OUTPUT, 'cache', 'bibauthors.json')
