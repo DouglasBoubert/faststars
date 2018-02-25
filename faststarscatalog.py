@@ -1,4 +1,4 @@
-"""Hypervelocity specific catalog class."""
+"""FastStars specific catalog class."""
 import codecs
 import json
 import os
@@ -10,12 +10,12 @@ from astrocats.catalog.catalog import Catalog
 from astrocats.catalog.quantity import QUANTITY
 from astrocats.catalog.utils import read_json_arr, read_json_dict
 
-from .hypervelocity import HYPERVELOCITY, Hypervelocity
-#from .utils import name_clean
+from .faststars import FASTSTARS, FastStars
+from .utils import name_clean
 
 
-class HypervelocityCatalog(Catalog):
-    """Catalog class for `Hypervelocity` objects."""
+class FastStarsCatalog(Catalog):
+    """Catalog class for `FastStars` objects."""
 
     class PATHS(Catalog.PATHS):
         """Paths to catalog inputs/outputs."""
@@ -24,7 +24,7 @@ class HypervelocityCatalog(Catalog):
 
         def __init__(self, catalog):
             """Initialize paths."""
-            super(HypervelocityCatalog.PATHS, self).__init__(catalog)
+            super(FastStarsCatalog.PATHS, self).__init__(catalog)
             # auxiliary datafiles
             self.TYPE_SYNONYMS = os.path.join(
                 self.PATH_INPUT, 'type-synonyms.json')
@@ -57,18 +57,18 @@ class HypervelocityCatalog(Catalog):
     class SCHEMA(object):
         """Define the HASH/URL associated with the present schema."""
 
-        HASH = (check_output(['git', '-C', 'hypervelocity',
+        HASH = (check_output(['git', '-C', 'astrocats/faststars',
                               'log', '-n', '1', '--format="%h"',
                               '--', 'SCHEMA.md'])
                 .decode('ascii').strip().strip('"').strip())
-        URL = ('https://github.com/DouglasBoubert/hypervelocity/blob/' + HASH +
+        URL = ('https://github.com/astrocatalogs/faststars/blob/' + HASH +
                '/SCHEMA.md')
 
     def __init__(self, args, log):
         """Initialize catalog."""
         # Initialize super `astrocats.catalog.catalog.Catalog` object
-        super(HypervelocityCatalog, self).__init__(args, log)
-        self.proto = Hypervelocity
+        super(FastStarsCatalog, self).__init__(args, log)
+        self.proto = FastStars
         self._load_aux_data()
         return
 
@@ -80,7 +80,7 @@ class HypervelocityCatalog(Catalog):
         
         FIX: needs heavy updating
         """
-        (bury_entry, save_entry) = super(HypervelocityCatalog, self).should_bury(name)
+        (bury_entry, save_entry) = super(FastStarsCatalog, self).should_bury(name)
 
         ct_val = None
         if name.startswith(tuple(self.nonsneprefixes_dict)):

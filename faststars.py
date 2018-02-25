@@ -1,4 +1,4 @@
-"""Hypervelocity class."""
+"""FastStars class."""
 import warnings
 from collections import OrderedDict
 from decimal import Decimal
@@ -20,8 +20,8 @@ from six import string_types
 #from .utils import frame_priority, host_clean, radec_clean
 
 
-class HYPERVELOCITY(ENTRY):
-    """Hypervelocity `Key` child class."""
+class FASTSTARS(ENTRY):
+    """FastStars `Key` child class."""
     PROPER_MOTION_RA = Key('propermotionra', KEY_TYPES.NUMERIC)
     PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC)
     #EXPLOSION_DATE = Key('explosiondate', KEY_TYPES.STRING)
@@ -34,8 +34,8 @@ class HYPERVELOCITY(ENTRY):
     #ERRORS = Key('errors')
 
 
-class Hypervelocity(Entry):
-    """Hypervelocity `Entry` child class.
+class FastStars(Entry):
+    """FastStars `Entry` child class.
 
     NOTE: OrderedDict data is just the `name` values from the JSON file.
           I.e. it does not include the highest nesting level
@@ -45,11 +45,11 @@ class Hypervelocity(Entry):
          case?)
     """
 
-    _KEYS = HYPERVELOCITY
+    _KEYS = FASTSTARS
 
     def __init__(self, catalog, name=None, stub=False):
-        """Initialize `Hypervelocity`."""
-        super(Hypervelocity, self).__init__(catalog, name, stub=stub)
+        """Initialize `FastStars`."""
+        super(FastStars, self).__init__(catalog, name, stub=stub)
         return
 
     def _append_additional_tags(self, name, sources, quantity):
@@ -125,8 +125,8 @@ class Hypervelocity(Entry):
                      source,
                      forcereplacebetter=False,
                      **kwargs):
-        """Add `Quantity` to `Hypervelocity`."""
-        success = super(Hypervelocity, self).add_quantity(
+        """Add `Quantity` to `FastStars`."""
+        success = super(FastStars, self).add_quantity(
             quantities, value, source, **kwargs)
 
         if not success:
@@ -264,7 +264,7 @@ class Hypervelocity(Entry):
                     kwargs[SOURCE.URL] = rep
                     break
 
-        return super(Hypervelocity, self).add_source(**kwargs)
+        return super(FastStars, self).add_source(**kwargs)
 
     def priority_prefixes(self):
         """Prefixes to given priority to when merging duplicate entries.
@@ -310,7 +310,7 @@ class Hypervelocity(Entry):
         return outdir, filename
 
     def sanitize(self):
-        super(Hypervelocity, self).sanitize()
+        super(FastStars, self).sanitize()
 
         # Calculate some columns based on imported data, sanitize some fields
         name = self[self._KEYS.NAME]
@@ -409,7 +409,7 @@ class Hypervelocity(Entry):
                     item[item._KEYS.SOURCE] = ','.join(aliases)
 
     def clean_internal(self, data):
-        """Clean input data from the 'Hypervelocity/input/internal' repository.
+        """Clean input data from the 'FastStars/input/internal' repository.
 
         FIX: instead of making changes in place to `dirty_event`, should a new
              event be created, values filled, then returned??
