@@ -71,59 +71,9 @@ class FastStarsCatalog(Catalog):
         An entry would be buried if it does not belong to the class of object
         associated with the given catalog.
         
-        FIX: needs heavy updating
+        FIX: perhaps sometimes we do want to bury?
         """
-        (bury_entry, save_entry) = super(FastStarsCatalog, self).should_bury(name)
-
-        ct_val = None
-        if name.startswith(tuple(self.nonsneprefixes_dict)):
-            self.log.debug(
-                "Killing '{}', non-SNe prefix.".format(name))
-            save_entry = False
-        else:
-            if SUPERNOVA.CLAIMED_TYPE in self.entries[name]:
-                for ct in self.entries[name][SUPERNOVA.CLAIMED_TYPE]:
-                    up_val = ct[QUANTITY.VALUE].upper().replace('?', '')
-                    up_types = [x.upper() for x in self.nonsnetypes]
-                    if up_val not in up_types and up_val != 'CANDIDATE':
-                        bury_entry = False
-                        save_entry = True
-                        break
-                    if up_val in up_types:
-                        bury_entry = True
-                        ct_val = ct[QUANTITY.VALUE]
-            else:
-                if (SUPERNOVA.DISCOVER_DATE in self.entries[name] and
-                    any([x.get(QUANTITY.VALUE).startswith('AT')
-                         for x in self.entries[name][SUPERNOVA.ALIAS]]) and
-                    not any([x.get(QUANTITY.VALUE).startswith('SN')
-                             for x in self.entries[name][SUPERNOVA.ALIAS]])):
-                    try:
-                        try:
-                            dd = datetime.strptime(self.entries[name][
-                                SUPERNOVA.DISCOVER_DATE][0].get('value', ''),
-                                '%Y/%m/%d')
-                        except ValueError:
-                            dd = datetime.strptime(self.entries[name][
-                                SUPERNOVA.DISCOVER_DATE][0].get('value', '') +
-                                '/12/31',
-                                '%Y')
-                    except ValueError:
-                        pass
-                    else:
-                        diff = datetime.today() - dd
-                        # Because of the TNS, many non-SNe beyond 2016.
-                        if dd.year >= 2016 and diff.days > 180:
-                            save_entry = False
-
-            if not save_entry:
-                self.log.warning(
-                    "Not saving '{}', {}.".format(name, ct_val))
-            elif bury_entry:
-                self.log.info(
-                    "Burying '{}', {}.".format(name, ct_val))
-
-        return (bury_entry, save_entry)
+        return (False, True)
 
     def _load_aux_data(self):
         """Load auxiliary dictionaries for use in this catalog."""
