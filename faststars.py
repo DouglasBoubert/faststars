@@ -296,7 +296,7 @@ class FastStars(Entry):
         # Get normal repository save directory
         else:
             repo_folders = self.catalog.PATHS.get_repo_output_folders()
-            repo_folders = sorted(repo_folders, key=lambda x: x.split('-')[-1])
+            #repo_folders = sorted(repo_folders, key=lambda x: x.split('-')[-1]) commented on 28/02/2017, this was sending everything to the graveyard
             outdir = repo_folders[0]
 
         return outdir, filename
