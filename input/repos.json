@@ -1,18 +1,18 @@
 {
     "output":[
-        "hypervelocity_output"
+        "faststars_output"
     ],
     "boneyard":[
-        "hypervelocity_boneyard"
+        "faststars_boneyard"
     ],
     "external":[
-        "hypervelocity_external",
-        "hypervelocity_contributed"
+        "faststars_external",
+        "faststars_contributed"
     ],
     "private":[
-        "hypervelocity_private"
+        "faststars_private"
     ],
     "internal":[
-        "hypervelocity_internal"
+        "faststars_internal"
     ]
 }
