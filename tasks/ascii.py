@@ -90,5 +90,39 @@ def do_ascii(catalog):
             catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, row['ID'], source=source)
     catalog.journal_entries()
+    
+    # 2012ApJ...744L..24L
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'apjl415156t1t2.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = str(row['Catalog'])
+        name, source = catalog.new_entry(oname, bibcode='2012ApJ...744L..24L')
+        catalog.entries[name].add_quantity(
+                FASTSTARS.ALIAS, row['ID'], source=source)
+        radec = oname.strip('SDSSJ')
+        print(radec)
+        radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
+        print(radec)
+        ra, dec = coord(radec, 
+                unit=(u.hourangle, u.deg)).to_string(
+                'hmsdms', sep=':').split()
+        catalog.entries[name].add_quantity(
+            FASTSTARS.RA, ra, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.DEC, dec, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.LUM_DIST, str(row['Dhel']), e_value=str(row['e_Dhel']), u_value='kpc', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_RA, str(row['pmra']), e_value=str(row['e_pmra']), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec']), e_value=str(row['e_pmdec']), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.CLAIMED_TYPE, "pHVS", source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.SPECTRAL_TYPE, "F", source=source)
+    catalog.journal_entries()
 
     return
