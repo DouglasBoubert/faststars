@@ -472,7 +472,7 @@ class FastStars(Entry):
 
 
     def set_preferred_name(self):
-        """Set preferred name of hypervelocity.
+        """Set preferred name of faststar.
 
         Highest preference goes to names of the form 'SN####AA'.
         Otherwise base the name on whichever survey is the 'discoverer'.
@@ -487,75 +487,13 @@ class FastStars(Entry):
             return name
         # If the name is already in the form 'SN####AA' then keep using
         # that
-        if (name.startswith('SN') and
-            ((is_number(name[2:6]) and not is_number(name[6:])) or
-             (is_number(name[2:5]) and not is_number(name[5:])))):
-            return name
-        # If one of the aliases is in the form 'SN####AA' then use that
-        for alias in aliases:
-            if (alias.startswith('SN') and
-                ((is_number(alias[2:6]) and not is_number(alias[6:])) or
-                 (is_number(alias[2:5]) and not is_number(alias[5:])))):
-                newname = alias
-                break
-        # If not, name based on the 'discoverer' survey
-        if not newname and SUPERNOVA.DISCOVERER in self:
-            discoverer = ','.join(
-                [x['value'].upper() for x in self[SUPERNOVA.DISCOVERER]])
-            if 'ASAS' in discoverer:
-                for alias in aliases:
-                    if 'ASASSN' in alias.upper():
-                        newname = alias
-                        break
-            if not newname and 'OGLE' in discoverer:
-                for alias in aliases:
-                    if 'OGLE' in alias.upper():
-                        newname = alias
-                        break
-            if not newname and 'CRTS' in discoverer:
-                for alias in aliases:
-                    if True in [
-                            x in alias.upper()
-                            for x in ['CSS', 'MLS', 'SSS', 'SNHUNT']
-                    ]:
-                        newname = alias
-                        break
-            if not newname and 'PS1' in discoverer:
-                for alias in aliases:
-                    if 'PS1' in alias.upper():
-                        newname = alias
-                        break
-            if not newname and 'PTF' in discoverer:
-                for alias in aliases:
-                    if 'PTF' in alias.upper():
-                        newname = alias
-                        break
-            if not newname and 'la silla-quest' in discoverer.lower():
-                for alias in aliases:
-                    if 'LSQ' in alias.upper():
-                        newname = alias
-                        break
-            if not newname and 'GAIA' in discoverer:
-                for alias in aliases:
-                    if 'GAIA' in alias.upper():
-                        newname = alias
-                        break
-        # If one of the aliases is in the form 'AT####AA' then use that
-        if not newname:
-            for alias in aliases:
-                if (alias.startswith('AT') and
-                    ((is_number(alias[2:6]) and not is_number(alias[6:])) or
-                     (is_number(alias[2:5]) and not is_number(alias[5:])))):
-                    newname = alias
-                    break
+        #if (name.startswith('SN') and
+        #    ((is_number(name[2:6]) and not is_number(name[6:])) or
+        #     (is_number(name[2:5]) and not is_number(name[5:])))):
+        #    return name
         # Otherwise, use the shortest name.
         if not newname:
             newname = min(aliases, key=len)
-        # Always prefer another alias over PSN
-        if not newname and name.startswith('PSN'):
-            for alias in aliases:
-                if not alias.startswith('PSN'):
-                    newname = alias
         if newname and name != newname:
             file_entry = None
             # Make sure new name doesn't already exist
