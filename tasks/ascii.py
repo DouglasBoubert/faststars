@@ -32,7 +32,7 @@ def do_ascii(catalog):
                             'ApJ_660_311_table1.csv')
     data = read(datafile, format='csv')
     for row in pbar(data, task_str):
-        oname = 'SDSS'+str(row['SDSS'])[1:]
+        oname = 'SDSS'+str(row['SDSS'])
         name, source = catalog.new_entry(oname, bibcode='2007ApJ...660..311B')
         gallon = float(str(row['Glon']))
         gallat = float(str(row['Glat']))
@@ -54,6 +54,39 @@ def do_ascii(catalog):
             FASTSTARS.LUM_DIST, str(dhel_MS), lower_limit=str(dhel_BHB), u_value='kpc', source=source)
         catalog.entries[name].add_quantity(
             FASTSTARS.CLAIMED_TYPE, "pBHVS", source=source)
+    catalog.journal_entries()
+    
+    # 2009ApJ...690.1369B
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'apj292642t1_ascii.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = row['Catalog']
+        name, source = catalog.new_entry(oname, bibcode='2009ApJ...690.1369B')
+        gallon = float(str(row['Glon']))
+        gallat = float(str(row['Glat']))
+        ra, dec = coord(
+            l=gallon * u.degree, b=gallat * u.degree,
+            frame='galactic').icrs.to_string(
+                'hmsdms', sep=':').split()
+        catalog.entries[name].add_quantity(
+            FASTSTARS.RA, ra, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.DEC, dec, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.VELOCITY, str(row['Vhel']), e_value='17.0', source=source) # The 17.0 is the upper bound of the systematic error.
+        galrad = float(str(row['RGC']))
+        dhel = rgc_to_dhel(galrad,gallon,gallat)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.LUM_DIST, str(dhel), u_value='kpc', source=source)
+        if str(row['ID'])[:3]=='HVS':
+            catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, "HVS", source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.ALIAS, row['ID'], source=source)
+        else:
+            catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, row['ID'], source=source)
     catalog.journal_entries()
 
     return
