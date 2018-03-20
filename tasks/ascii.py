@@ -19,8 +19,8 @@ from astropy.coordinates import SkyCoord as coord
 from astropy.io.ascii import read
 from astropy.time import Time as astrotime
 
-from ..supernova import SUPERNOVA
-from .utils import rgc_to_dhel
+from ..faststars import FASTSTARS
+from ..utils import rgc_to_dhel
 
 
 def do_ascii(catalog):
@@ -30,7 +30,7 @@ def do_ascii(catalog):
     # 2007ApJ...660..311B
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
                             'ApJ_660_311_table1.csv')
-    data = read(datafile, format='cds')
+    data = read(datafile, format='csv')
     for row in pbar(data, task_str):
         oname = 'SDSS'+str(row['SDSS'])[1:]
         name, source = catalog.new_entry(oname, bibcode='2007ApJ...660..311B')
@@ -45,13 +45,15 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
             FASTSTARS.DEC, dec, source=source)
         catalog.entries[name].add_quantity(
-            FASTSTARS.VELOCITY, float(str(row['Vhelio'])), source=source)
+            FASTSTARS.VELOCITY, str(row['Vhelio']), source=source)
         galrad_MS = float(str(row['Ra']))
         galrad_BHB = float(str(row['Rb']))
         dhel_MS = rgc_to_dhel(galrad_MS,gallon,gallat)
         dhel_BHB = rgc_to_dhel(galrad_BHB,gallon,gallat)
         catalog.entries[name].add_quantity(
-            FASTSTARS.LUMDIST, dhel_MS, lower_limit=dhel_BHB, source=source)
+            FASTSTARS.LUM_DIST, str(dhel_MS), lower_limit=str(dhel_BHB), source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.CLAIMED_TYPE, "pBHVS", source=source)
     catalog.journal_entries()
 
     return
