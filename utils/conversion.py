@@ -1,6 +1,6 @@
 """
 """
-from .constants import RSOLAR, DTR
+from ..constants import RSOLAR, DTR
 import numpy as np
 
 __all__ = ['rgc_to_dhel']
