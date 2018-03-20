@@ -8,6 +8,15 @@
         "repo": "input/faststars_internal",
         "priority": 1
     },
+    "ascii": {
+        "nice_name": "%pre ASCII",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.ascii",
+        "function": "do_ascii",
+        "repo": "input/faststars-external",
+        "priority": 2
+    },
     "merge_duplicates": {
         "nice_name": "Merging duplicates",
         "active": false,
