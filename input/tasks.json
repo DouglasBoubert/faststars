@@ -14,7 +14,7 @@
         "update": false,
         "module": "faststars.tasks.ascii",
         "function": "do_ascii",
-        "repo": "input/faststars-external",
+        "repo": "input/faststars_external",
         "priority": 2
     },
     "merge_duplicates": {
