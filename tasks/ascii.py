@@ -79,6 +79,8 @@ def do_ascii(catalog):
         dhel = rgc_to_dhel(galrad,gallon,gallat)
         catalog.entries[name].add_quantity(
             FASTSTARS.LUM_DIST, str(dhel), u_value='kpc', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.SPECTRAL_TYPE, row['Type'], source=source)
         if str(row['ID'])[:3]=='HVS':
             catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, "HVS", source=source)
