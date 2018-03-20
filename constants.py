@@ -12,3 +12,7 @@ MAX_VISUAL_BANDS = [
     ['V', 'G'],       # if not, V-like bands
     ['R', 'r']        # if not, R-like bands
 ]
+
+RSOLAR = 8.29
+
+DTR = np.pi/180.
