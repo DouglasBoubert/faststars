@@ -73,8 +73,12 @@ def do_ascii(catalog):
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
             FASTSTARS.DEC, dec, source=source)
-        catalog.entries[name].add_quantity(
-            FASTSTARS.VELOCITY, str(row['Vhel']), e_value='17.0', source=source) # The 17.0 is the upper bound of the systematic error.
+        if str(row['e_Vhel'])!='NA':
+            catalog.entries[name].add_quantity(
+                FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
+        else:
+            catalog.entries[name].add_quantity(
+                FASTSTARS.VELOCITY, str(row['Vhel']), source=source)
         galrad = float(str(row['RGC']))
         dhel = rgc_to_dhel(galrad,gallon,gallat)
         catalog.entries[name].add_quantity(
@@ -101,9 +105,7 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
                 FASTSTARS.ALIAS, row['ID'], source=source)
         radec = oname.strip('SDSSJ')
-        print(radec)
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
-        print(radec)
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
                 'hmsdms', sep=':').split()
@@ -123,6 +125,45 @@ def do_ascii(catalog):
             FASTSTARS.CLAIMED_TYPE, "pHVS", source=source)
         catalog.entries[name].add_quantity(
             FASTSTARS.SPECTRAL_TYPE, "F", source=source)
+    catalog.journal_entries()
+    
+    # 2012ApJ...751...55B
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'apj427101t1_ascii.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = str(row['Catalog']).replace(' ','')
+        name, source = catalog.new_entry(oname, bibcode='2012ApJ...751...55B')
+        gallon = float(str(row['Glon']))
+        gallat = float(str(row['Glat']))
+        ra, dec = coord(
+            l=gallon * u.degree, b=gallat * u.degree,
+            frame='galactic').icrs.to_string(
+                'hmsdms', sep=':').split()
+        catalog.entries[name].add_quantity(
+            FASTSTARS.RA, ra, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.DEC, dec, source=source)
+        if str(row['e_Vhel'])!='NA':
+            catalog.entries[name].add_quantity(
+                FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, row['Type'], source=source) # Only the new HVSs have definite spectral types
+        else:
+            catalog.entries[name].add_quantity(
+                FASTSTARS.VELOCITY, str(row['Vhel']), source=source)
+        galrad = float(str(row['RGC']))
+        dhel = rgc_to_dhel(galrad,gallon,gallat)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.LUM_DIST, str(dhel), u_value='kpc', source=source)
+        if str(row['ID'])[:3]=='HVS':
+            catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, "HVS", source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.ALIAS, row['ID'], source=source)
+        else:
+            catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, row['ID'], source=source)
     catalog.journal_entries()
 
     return
