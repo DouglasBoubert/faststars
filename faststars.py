@@ -16,8 +16,8 @@ from astrocats.catalog.utils import (bib_priority, get_sig_digits,
 from astropy.time import Time as astrotime
 from six import string_types
 
-#from .constants import MAX_VISUAL_BANDS
-#from .utils import frame_priority, host_clean, radec_clean
+from .constants import MAX_VISUAL_BANDS
+from .utils import frame_priority, host_clean, radec_clean
 
 
 class FASTSTARS(ENTRY):
@@ -358,11 +358,11 @@ class FastStars(Entry):
                         source[SOURCE.BIBCODE]):
                     source[SOURCE.NAME] = source[SOURCE.BIBCODE]
 
-        if self._KEYS.REDSHIFT in self:
-            self[self._KEYS.REDSHIFT] = list(
-                sorted(
-                    self[self._KEYS.REDSHIFT],
-                    key=lambda q: frame_priority(q, self._KEYS.REDSHIFT)))
+        #if self._KEYS.REDSHIFT in self:
+        #    self[self._KEYS.REDSHIFT] = list(
+        #        sorted(
+        #            self[self._KEYS.REDSHIFT],
+        #            key=lambda q: frame_priority(q, self._KEYS.REDSHIFT)))
 
         if self._KEYS.VELOCITY in self:
             self[self._KEYS.VELOCITY] = list(
