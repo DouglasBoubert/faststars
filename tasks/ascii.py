@@ -51,7 +51,7 @@ def do_ascii(catalog):
         dhel_MS = rgc_to_dhel(galrad_MS,gallon,gallat)
         dhel_BHB = rgc_to_dhel(galrad_BHB,gallon,gallat)
         catalog.entries[name].add_quantity(
-            FASTSTARS.LUM_DIST, str(dhel_MS), lower_limit=str(dhel_BHB), source=source)
+            FASTSTARS.LUM_DIST, str(dhel_MS), lower_limit=str(dhel_BHB), u_value='kpc', source=source)
         catalog.entries[name].add_quantity(
             FASTSTARS.CLAIMED_TYPE, "pBHVS", source=source)
     catalog.journal_entries()
