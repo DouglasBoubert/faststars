@@ -228,5 +228,22 @@ def do_ascii(catalog):
             catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, 'pBHVS', source=source)
     catalog.journal_entries()
+    
+    # 2014EAS....67..255Z
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            '1501.07824.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = str(row['ID'])
+        name, source = catalog.new_entry(oname, bibcode='2014EAS....67..255Z')
+        catalog.entries[name].add_quantity(
+                FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_RA, str(row['pmra']), e_value=str(row['e_pmra']), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec']), e_value=str(row['e_pmdec']), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.LUM_DIST, str(row['Dhel']), u_value='kpc', source=source) # This distance may have some metallicity dependent uncertainty?
+    catalog.journal_entries()
 
     return
