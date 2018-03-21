@@ -514,15 +514,21 @@ class FastStars(Entry):
             if file_entry:
                 self._log.info("`{}` already exists, copying `{}` to it".
                                format(newname, name))
-                self.catalog.copy_entry_to_entry(
-                    self.catalog.entries[name], file_entry)
+                # Douglas had to add this try-except because some entries had already been deleted.
+                try:
+                    self.catalog.copy_entry_to_entry(
+                        self.catalog.entries[name], file_entry)
+                    del self.catalog.entries[name]
+                except KeyError:
+                    self._log.info("`{}` has already been coped to `{}`".
+                               format(name, newname))
                 self.catalog.entries[newname] = file_entry
             else:
                 self._log.info("Changing entry from name '{}' to preferred"
                                " name '{}'".format(name, newname))
                 self.catalog.entries[newname] = self.catalog.entries[name]
                 self.catalog.entries[newname][self._KEYS.NAME] = newname
-            del self.catalog.entries[name]
+                del self.catalog.entries[name]
             return newname
 
         return name

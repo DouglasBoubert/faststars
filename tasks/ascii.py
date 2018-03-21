@@ -193,5 +193,40 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
             FASTSTARS.SPECTRAL_TYPE, "G/K", source=source)
     catalog.journal_entries()
+    
+    # 2014ApJ...787...89B
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'apj494602t1_ascii.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = str(row['Catalog']).replace(' ','')
+        name, source = catalog.new_entry(oname, bibcode='2014ApJ...787...89B')
+        radec = oname.strip('SDSSJ')
+        radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:19]
+        ra, dec = coord(radec, 
+                unit=(u.hourangle, u.deg)).to_string(
+                'hmsdms', sep=':').split()
+        catalog.entries[name].add_quantity(
+            FASTSTARS.RA, ra, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.DEC, dec, source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
+        galrad = float(str(row['RGC']))
+        errgalrad = float(str(row['e_RGC']))
+        dhel = rgc_to_dhel(galrad,gallon,gallat)
+        dhel_lo = rgc_to_dhel(galrad-errgalrad,gallon,gallat)
+        dhel_hi = rgc_to_dhel(galrad+errgalrad,gallon,gallat)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.LUM_DIST, str(dhel), e_lower_value=dhel-dhel_lo, e_upper_value=dhel_hi-dhel, u_value='kpc', source=source)
+        if str(row['ID'])!='pBHVS':
+            catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, "HVS", source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.ALIAS, 'HVS'+str(row['ID']), source=source)
+        else:
+            catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, 'pBHVS', source=source)
+    catalog.journal_entries()
 
     return
