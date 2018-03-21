@@ -165,5 +165,33 @@ def do_ascii(catalog):
             catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, row['ID'], source=source)
     catalog.journal_entries()
+    
+    # 2014ApJ...780....7P
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'apj485719t1_ascii.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = 'SDSS'+str(row['Catalog']).replace(' ','')
+        name, source = catalog.new_entry(oname, bibcode='2014ApJ...780....7P')
+        catalog.entries[name].add_quantity(
+                FASTSTARS.ALIAS, 'Pal'+str(row['Pal']), source=source)
+        radec = oname.strip('SDSSJ')
+        radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
+        ra, dec = coord(radec, 
+                unit=(u.hourangle, u.deg)).to_string(
+                'hmsdms', sep=':').split()
+        catalog.entries[name].add_quantity(
+            FASTSTARS.RA, ra, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.DEC, dec, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.VELOCITY, str(row['Vhel']), source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.LUM_DIST, str(row['Dhel']), u_value='kpc', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.CLAIMED_TYPE, "pHVS", source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.SPECTRAL_TYPE, "G/K", source=source)
+    catalog.journal_entries()
 
     return
