@@ -244,6 +244,10 @@ def do_ascii(catalog):
             FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec']), e_value=str(row['e_pmdec']), u_value='mas/yr', source=source)
         catalog.entries[name].add_quantity(
             FASTSTARS.LUM_DIST, str(row['Dhel']), u_value='kpc', source=source) # This distance may have some metallicity dependent uncertainty?
+        catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, 'pHVS', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, 'K/M', source=source)
     catalog.journal_entries()
 
     return
