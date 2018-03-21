@@ -249,5 +249,37 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
                 FASTSTARS.SPECTRAL_TYPE, 'K/M', source=source)
     catalog.journal_entries()
+    
+    # 2014ApJ...789L...2Z
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'apjl496832t1t2t3_ascii.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = str(row['ID'])
+        name, source = catalog.new_entry(oname, bibcode='2014ApJ...789L...2Z')
+        catalog.entries[name].add_quantity(
+            FASTSTARS.ALIAS, str(row['Catalog']), source=source)
+        radec = str(row['Catalog']).strip('J')
+        radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
+        ra, dec = coord(radec, 
+                unit=(u.hourangle, u.deg)).to_string(
+                'hmsdms', sep=':').split()
+        catalog.entries[name].add_quantity(
+            FASTSTARS.RA, ra, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.DEC, dec, source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.VELOCITY, str(row['Vrb']), source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_RA, str(row['pmra']), e_value=str(row['e_pmra']), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec']), e_value=str(row['e_pmdec']), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.LUM_DIST, str(row['Dhel']), u_value='kpc', source=source) # This distance may have some metallicity dependent uncertainty?
+        catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, 'pHVS', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, str(row['Type']), source=source)
+    catalog.journal_entries()
 
     return
