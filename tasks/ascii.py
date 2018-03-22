@@ -342,5 +342,48 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
                 FASTSTARS.SPECTRAL_TYPE, str(row['Type']), source=source)
     catalog.journal_entries()
-
+    
+    # 2015MNRAS.447.2046H
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'hawkins2015.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = str(row['Catalog']).strip(' ')
+        oname = 'RAVE'+oname
+        name, source = catalog.new_entry(oname, bibcode='2015MNRAS.447.2046H')
+        radec = oname.strip('RAVEJ')
+        radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:8]+' '+radec[8:11]+' '+radec[11:13]+' '+radec[13:15]
+        ra, dec = coord(radec, 
+                unit=(u.hourangle, u.deg)).to_string(
+                'hmsdms', sep=':').split()
+        catalog.entries[name].add_quantity(
+            FASTSTARS.RA, ra, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.DEC, dec, source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.VELOCITY, str(row['Vhel']).strip(' '), e_value=str(row['e_Vhel']).strip(' '), source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_RA, str(row['pmra']).strip(' '), e_value=str(row['e_pmra']).strip(' '), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec']).strip(' '), e_value=str(row['e_pmdec']).strip(' '), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.LUM_DIST, str(row['Dhel']).strip(' '), e_value=str(row['e_Dhel']).strip(' '), u_value='pc', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, str(row['Claim']).strip(' '), source=source)
+    catalog.journal_entries()
+    
+    # 2015A&A...576L..14Z
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'zeigerer.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = 'Pal'+str(row['Pal'])
+        name, source = catalog.new_entry(oname, bibcode='2015A&A...576L..14Z')
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_RA, str(row['pmra']), e_value=str(row['e_pmra']), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec']), e_value=str(row['e_pmdec']), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, 'nHVS', source=source)
+    catalog.journal_entries()
     return
