@@ -455,4 +455,27 @@ def do_ascii(catalog):
                 FASTSTARS.SPECTRAL_TYPE, 'F/G/K', source=source)
     catalog.journal_entries()
     
+    # 2015AJ....150...77V
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'vickers2015.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = str(row['Catalog'])
+        oname = 'SDSS'+oname
+        name, source = catalog.new_entry(oname, bibcode='2015AJ....150...77V')
+        radec = oname.strip('SDSSJ')
+        radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
+        ra, dec = coord(radec, 
+                unit=(u.hourangle, u.deg)).to_string(
+                'hmsdms', sep=':').split()
+        catalog.entries[name].add_quantity(
+            FASTSTARS.RA, ra, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.DEC, dec, source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, str(row['Claim']), source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, 'F/G/K/M', source=source)
+    catalog.journal_entries()
+    
     return
