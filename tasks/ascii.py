@@ -386,4 +386,40 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, 'nHVS', source=source)
     catalog.journal_entries()
+    
+    # 2015ApJ...804...49B
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'apj510826t1_ascii.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = str(row['Catalog']).strip(' ')
+        if oname[1]==':':
+            # Add the leading 0
+            oname = '0'+oname
+        oname = 'SDSSJ'+oname
+        name, source = catalog.new_entry(oname.replace(':',''), bibcode='2015ApJ...804...49B')
+        #print(str(row['ID']))
+        catalog.entries[name].add_quantity(
+            FASTSTARS.ALIAS, str(row['ID']), source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_RA, str(row['pmra']).strip(' '), e_value=str(row['e_pmra']).strip(' '), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec']).strip(' '), e_value=str(row['e_pmdec']).strip(' '), u_value='mas/yr', source=source)
+        if str(row['newspec']) == 'y':
+            radec = oname.strip('SDSSJ')
+            ra, dec = radec[:10], radec[10:]
+            catalog.entries[name].add_quantity(
+                FASTSTARS.RA, ra, source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.DEC, dec, source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.LUM_DIST, str(row['Dhel']), e_value=str(row['e_Dhel']), u_value='pc', source=source)
+            catalog.entries[name].add_quantity(
+                    FASTSTARS.CLAIMED_TYPE, str(row['Claim']), source=source)
+            catalog.entries[name].add_quantity(
+                    FASTSTARS.SPECTRAL_TYPE, str(row['Type']), source=source)
+    catalog.journal_entries()
+    
     return
