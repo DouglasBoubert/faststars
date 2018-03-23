@@ -478,4 +478,40 @@ def do_ascii(catalog):
                 FASTSTARS.SPECTRAL_TYPE, 'F/G/K/M', source=source)
     catalog.journal_entries()
     
+    # 2015ApJ...813...26F
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'favia2015.csv')
+    data = read(datafile, format='csv')
+    for row in pbar(data, task_str):
+        oname = str(row['Catalog'])
+        oname = 'SDSS'+oname
+        name, source = catalog.new_entry(oname, bibcode='2015ApJ...813...26F')
+        radec = oname.strip('SDSSJ')
+        radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
+        ra, dec = coord(radec, 
+                unit=(u.hourangle, u.deg)).to_string(
+                'hmsdms', sep=':').split()
+        catalog.entries[name].add_quantity(
+            FASTSTARS.ALIAS, 'Favia'+str(row['ID']), source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.RA, ra, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.DEC, dec, source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_RA, str(row['pmra1']), e_value=str(row['e_pmra1']), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec1']), e_value=str(row['e_pmdec1']), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.LUM_DIST, str(row['Dhel']), e_value=str(row['e_Dhel']), u_value='pc', source=source)
+        if str(row['Unbound'])=='yes':
+            catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, 'pHVS', source=source)
+        else:
+            catalog.entries[name].add_quantity(
+                FASTSTARS.CLAIMED_TYPE, 'pBHVS', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, 'M'+str(row['Type']), source=source)
+    catalog.journal_entries()
     return
