@@ -26,6 +26,15 @@
         "groups": ["meta"],
         "priority": -100
     },
+    "mergeradec": {
+        "nice_name": "Merging entries",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.mergeradec",
+        "function": "do_mergeradec",
+        "groups": ["meta"],
+        "priority": -20
+    },
     "cleanup": {
         "nice_name": "Cleaning up entries",
         "active": true,
