@@ -3,98 +3,19 @@
         "nice_name": "%pre metadata and photometry",
         "active": true,
         "update": false,
-        "module": "supernovae.tasks.general_data",
+        "module": "faststars.tasks.general_data",
         "function": "do_internal",
-        "repo": "input/sne-internal",
+        "repo": "input/faststars_internal",
         "priority": 1
-    },
-    "radio": {
-        "nice_name": "%pre radio data",
-        "active": true,
-        "update": false,
-        "module": "supernovae.tasks.general_data",
-        "function": "do_external_radio",
-        "repo": "input/sne-external-radio",
-        "priority": 2
-    },
-    "xray": {
-        "nice_name": "%pre X-ray data",
-        "active": true,
-        "update": false,
-        "module": "supernovae.tasks.general_data",
-        "function": "do_external_xray",
-        "repo": "input/sne-external-xray",
-        "priority": 2
-    },
-    "simbad": {
-        "nice_name": "%pre SIMBAD",
-        "active": true,
-        "update": false,
-        "module": "supernovae.tasks.simbad",
-        "function": "do_simbad",
-        "groups": ["meta"],
-        "priority": 3
-    },
-    "vizier": {
-        "nice_name": "%pre VizieR",
-        "active": true,
-        "update": false,
-        "module": "supernovae.tasks.vizier",
-        "function": "do_vizier",
-        "groups": ["photometry"],
-        "repo": "input/sne-external",
-        "priority": 4
-    },
-    "donated_photo": {
-        "nice_name": "%pre donations",
-        "active": true,
-        "update": false,
-        "module": "supernovae.tasks.donations",
-        "function": "do_donated_photo",
-        "repo": "input/sne-external",
-        "priority": 5
     },
     "ascii": {
         "nice_name": "%pre ASCII",
         "active": true,
         "update": false,
-        "module": "supernovae.tasks.ascii",
+        "module": "faststars.tasks.ascii",
         "function": "do_ascii",
-        "repo": "input/sne-external",
-        "priority": 8
-    },
-    "donated_spectra": {
-        "nice_name": "%pre Donated spectra",
-        "active": true,
-        "update": false,
-        "module": "supernovae.tasks.donations",
-        "function": "do_donated_spectra",
-        "groups": ["spectra"],
-        "repo": "input/sne-external-spectra",
-        "always_journal": true,
-        "priority": 100
-    },
-    "fits_spectra": {
-        "nice_name": "%pre FITS spectra",
-        "active": true,
-        "update": false,
-        "module": "supernovae.tasks.general_data",
-        "function": "do_external_fits_spectra",
-        "groups": ["spectra"],
-        "repo": "input/sne-external-fits-spectra",
-        "always_journal": true,
-        "priority": 209
-    },
-    "hst": {
-        "nice_name": "Coordinates from HST pointings",
-        "active": true,
-        "update": false,
-        "module": "supernovae.tasks.hst",
-        "function": "do_hst",
-        "groups": ["meta"],
-        "repo": "input/sne-external",
-        "always_journal": true,
-        "priority": -300
+        "repo": "input/faststars_external",
+        "priority": 2
     },
     "merge_duplicates": {
         "nice_name": "Merging duplicates",
@@ -105,24 +26,22 @@
         "groups": ["meta"],
         "priority": -100
     },
+    "mergeradec": {
+        "nice_name": "Merging entries",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.mergeradec",
+        "function": "do_mergeradec",
+        "groups": ["meta"],
+        "priority": -20
+    },
     "cleanup": {
         "nice_name": "Cleaning up entries",
         "active": true,
         "update": false,
-        "module": "supernovae.tasks.cleanup",
+        "module": "faststars.tasks.cleanup",
         "function": "do_cleanup",
         "groups": ["meta"],
         "priority": -10
-    },
-    "mosfit": {
-        "nice_name": "Model fits from MOSFiT",
-        "active": true,
-        "update": false,
-        "module": "supernovae.tasks.mosfit",
-        "function": "do_mosfit",
-        "groups": ["models"],
-        "repo": "input/sne-external-models",
-        "always_journal": true,
-        "priority": -1
     }
 }
