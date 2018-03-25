@@ -1,1 +1,16 @@
 *.pyc
+.DS_Store
+*.py[cod]
+*.jpg
+*.gz
+*.html
+!catalog.html
+*.xml
+*.json
+!/catalog.json
+*.sw*
+*-needsbib.txt
+faststars-*
+*.log
+*.bak
+WISeWEBSpider
