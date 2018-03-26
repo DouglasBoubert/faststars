@@ -1,0 +1,2 @@
+faststars-output
+faststars-boneyard
