@@ -2,6 +2,7 @@
 """
 import re
 
+import numpy as np
 from astropy.coordinates import SkyCoord as coord
 import astropy.units as un
 from dustmaps.bayestar import BayestarWebQuery
@@ -57,8 +58,16 @@ def do_dust(catalog):
                 '"{}" has a distance but not an attached unit.'.format(oname))
                 continue
             reddening = bayestar(c, mode='median')
-            source = catalog.entries[name].add_source(bibcode='2018arXiv180103555G')
-            catalog.entries[name].add_quantity(
+            
+            # If that reddening is a nan (ie. the star lies outside PanSTARRS) switch to SFD
+            if np.isnan(reddening) == True:
+                c=coord(Mradec,unit=(un.hourangle, un.deg), frame='icrs')
+                reddening = sfd(c)
+                source = catalog.entries[name].add_source(bibcode='1998ApJ...500..525S')
+                catalog.entries[name].add_quantity(FASTSTARS.EBV, str(reddening), source, upperlimit=True, derived=True)
+            else:
+                source = catalog.entries[name].add_source(bibcode='2018arXiv180103555G')
+                catalog.entries[name].add_quantity(
                             FASTSTARS.EBV, str(reddening), source, derived=True)
     
     catalog.journal_entries()
