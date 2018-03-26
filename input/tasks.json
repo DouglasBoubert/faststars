@@ -43,5 +43,14 @@
         "function": "do_cleanup",
         "groups": ["meta"],
         "priority": -10
+    },
+    "dust": {
+        "nice_name": "Querying for dust",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.dust",
+        "function": "do_dust",
+        "groups": ["meta"],
+        "priority": -9
     }
 }
