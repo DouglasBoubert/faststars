@@ -1,18 +1,18 @@
 {
     "output":[
-        "faststars_output"
+        "faststars-output"
     ],
     "boneyard":[
-        "faststars_boneyard"
+        "faststars-boneyard"
     ],
     "external":[
-        "faststars_external",
-        "faststars_contributed"
+        "faststars-external",
+        "faststars-contributed"
     ],
     "private":[
-        "faststars_private"
+        "faststars-private"
     ],
     "internal":[
-        "faststars_internal"
+        "faststars-internal"
     ]
 }

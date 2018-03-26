@@ -2,6 +2,7 @@
 """
 from astropy import constants as const
 from astropy import units as un
+import numpy as np
 
 
 CLIGHT = const.c.cgs.value

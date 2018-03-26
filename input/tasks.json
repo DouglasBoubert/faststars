@@ -5,7 +5,7 @@
         "update": false,
         "module": "faststars.tasks.general_data",
         "function": "do_internal",
-        "repo": "input/faststars_internal",
+        "repo": "input/faststars-internal",
         "priority": 1
     },
     "ascii": {
@@ -14,7 +14,7 @@
         "update": false,
         "module": "faststars.tasks.ascii",
         "function": "do_ascii",
-        "repo": "input/faststars_external",
+        "repo": "input/faststars-external",
         "priority": 2
     },
     "merge_duplicates": {
