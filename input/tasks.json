@@ -52,5 +52,14 @@
         "function": "do_dust",
         "groups": ["meta"],
         "priority": -9
+    },
+    "sdss": {
+        "nice_name": "Querying against SDSS",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.sdss",
+        "function": "do_sdss",
+        "groups": ["meta"],
+        "priority": -8
     }
 }
