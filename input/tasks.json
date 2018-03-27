@@ -61,5 +61,14 @@
         "function": "do_sdss",
         "groups": ["meta"],
         "priority": -8
+    },
+    "gaia": {
+        "nice_name": "Querying against Gaia",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.gaia",
+        "function": "do_gaia",
+        "groups": ["meta"],
+        "priority": -7
     }
 }

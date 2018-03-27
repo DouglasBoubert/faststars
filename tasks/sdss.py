@@ -43,7 +43,7 @@ def do_sdss(catalog):
     maxstep = 100 # stepsize
     Nentries = len(Mradec)
     roundindex = np.zeros(0) # the stepping round that this star's data was acquired in, needed to connect the obj_id in the query to the name of the star
-    for i in range(int(Nentries/maxstep)):
+    for i in range(int(Nentries/maxstep)+1):
         result_tmp = SDSS.query_crossid(c[maxstep*i:min(maxstep*(i+1),Nentries)], timeout=200.,photoobj_fields=['u','err_u','g','err_g','r', 'err_r','i','err_i','z','err_z','MJD'])
         roundindex = np.concatenate([roundindex,i*np.ones(len(result_tmp['obj_id']))])
         if i == 0:
