@@ -27,6 +27,7 @@ class FASTSTARS(ENTRY):
         replace_better=True)
     PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC,
         replace_better=True)
+    PARALLAX = Key('parallax', KEY_TYPES.NUMERIC)
     CLAIMED_TYPE = Key('claimedtype',
                        KEY_TYPES.STRING,
                        kind_preference=['HVS'],
