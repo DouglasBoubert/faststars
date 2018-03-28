@@ -9,13 +9,13 @@ from astropy import units as un
 from astropy.coordinates import SkyCoord as coord
 from tqdm import tqdm
 
-from astrocats.supernovae.scripts.repos import repo_file_list
+from astrocats.faststars.scripts.repos import repo_file_list
 
 from ...catalog.utils import get_entry_filename, is_number
 
 dupes = []
 
-outdir = "astrocats/supernovae/output/"
+outdir = "astrocats/faststars/output/"
 
 files = repo_file_list(bones=False)
 
@@ -194,7 +194,7 @@ for i1, item1 in enumerate(tqdm(newcatalog)):
             continue
 
         edit = True if os.path.isfile(
-            '../sne-internal/' + get_entry_filename(name1) +
+            '../hvs-internal/' + get_entry_filename(name1) +
             '.json') else False
 
         dupes.append(OrderedDict([('name1', name1),

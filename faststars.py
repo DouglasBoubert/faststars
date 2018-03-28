@@ -23,23 +23,18 @@ from .utils import frame_priority, host_clean, radec_clean
 class FASTSTARS(ENTRY):
     """FastStars `Key` child class."""
     DISCOVERY_DATE = Key('discoverdate', KEY_TYPES.STRING)
-    PROPER_MOTION_RA = Key('propermotionra', KEY_TYPES.NUMERIC)
-    PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC)
+    PROPER_MOTION_RA = Key('propermotionra', KEY_TYPES.NUMERIC,
+        replace_better=True)
+    PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC,
+        replace_better=True)
     PARALLAX = Key('parallax', KEY_TYPES.NUMERIC)
     CLAIMED_TYPE = Key('claimedtype',
                        KEY_TYPES.STRING,
                        kind_preference=['HVS'],
                        replace_better=True)
     SPECTRAL_TYPE = Key('spectraltype',
-                       KEY_TYPES.STRING,
-                       replace_better=True)
-    #EXPLOSION_DATE = Key('explosiondate', KEY_TYPES.STRING)
-    #MAX_VISUAL_ABS_MAG = Key('maxvisualabsmag', KEY_TYPES.NUMERIC)
-    #MAX_VISUAL_APP_MAG = Key('maxvisualappmag', KEY_TYPES.NUMERIC)
-    #MAX_VISUAL_BAND = Key('maxvisualband', KEY_TYPES.STRING)
-    #MAX_VISUAL_DATE = Key('maxvisualdate',
-    #                      KEY_TYPES.STRING,
-    #                      replace_better=True)
+                        KEY_TYPES.STRING,
+                        replace_better=True)
     ERRORS = Key('errors')
 
 
