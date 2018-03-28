@@ -10,18 +10,18 @@ from bokeh.resources import CDN
 
 from astrocats.catalog.utils import is_number, tq
 
-outdir = "astrocats/supernovae/output/"
+outdir = "astrocats/faststars/output/"
 
 mincnt = 5
 
 with open(outdir + 'catalog.min.json', 'r') as f:
     filetext = f.read()
     meta = json.loads(filetext, object_pairs_hook=OrderedDict)
-with open('astrocats/supernovae/input/type-synonyms.json', 'r') as f:
+with open('astrocats/faststars/input/type-synonyms.json', 'r') as f:
     typereps = json.loads(f.read(), object_pairs_hook=OrderedDict)
-with open('astrocats/supernovae/input/non-sne-types.json', 'r') as f:
-    nonsnetypes = json.loads(f.read(), object_pairs_hook=OrderedDict)
-    nonsnetypes = [x.upper() for x in nonsnetypes]
+with open('astrocats/faststars/input/non-hvs-types.json', 'r') as f:
+    nonhvstypes = json.loads(f.read(), object_pairs_hook=OrderedDict)
+    nonhvstypes = [x.upper() for x in nonhvstypes]
 
 sntypes = []
 
@@ -35,7 +35,7 @@ for event in meta:
                     break
             if not ctv:
                 continue
-            if (ctv not in sntypes and ctv.upper() not in nonsnetypes and
+            if (ctv not in sntypes and ctv.upper() not in nonhvstypes and
                     ctv not in ['nIa', 'Candidate'] and
                     not is_number(ctv) and '\\' not in ctv):
                 # temporarily ignoring bad types from import

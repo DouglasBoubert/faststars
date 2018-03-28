@@ -7,9 +7,9 @@ LD_LIBRARY_PATH=/usr/local/lib:/opt/local/lib ; export LD_LIBRARY_PATH
 cd /var/www/html/hvs/astrocats
 python -m astrocats faststars git-pull
 python -m astrocats faststars import
-SNEUPDATE=$?
-echo $SNEUPDATE
-if [[ $SNEUPDATE == 0 ]]; then
+HVSUPDATE=$?
+echo $HVSUPDATE
+if [[ $HVSUPDATE == 0 ]]; then
 	astrocats/faststars/scripts/generate-web.sh
 	python -m astrocats faststars git-pull
 	python -m astrocats faststars git-push

@@ -5,14 +5,14 @@ from collections import OrderedDict
 
 from tqdm import tqdm
 
-from astrocats.supernovae.scripts.events import get_event_text
-from astrocats.supernovae.scripts.repos import repo_file_list
+from astrocats.faststars.scripts.events import get_event_text
+from astrocats.faststars.scripts.repos import repo_file_list
 
 errata = []
 
 files = repo_file_list(bones=False)
 
-outdir = 'astrocats/supernovae/output/'
+outdir = 'astrocats/faststars/output/'
 
 for fcnt, eventfile in enumerate(tqdm(sorted(files, key=lambda s: s.lower()))):
     # if fcnt > 100:
