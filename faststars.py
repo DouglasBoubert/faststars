@@ -472,6 +472,108 @@ class FastStars(Entry):
 
         return data
 
+    def _get_max_light(self, visual=False):
+        if self._KEYS.PHOTOMETRY not in self:
+            return (None, None, None, None)
+
+        eventphoto = [
+            (x[PHOTOMETRY.U_TIME], Decimal(x[PHOTOMETRY.TIME])
+             if not isinstance(x[PHOTOMETRY.TIME], list) else
+             Decimal(np.mean([float(y) for y in x[PHOTOMETRY.TIME]])),
+             Decimal(x[PHOTOMETRY.MAGNITUDE]), x.get(PHOTOMETRY.BAND, ''),
+             x[PHOTOMETRY.SOURCE]) for x in self[self._KEYS.PHOTOMETRY]
+            if (PHOTOMETRY.MAGNITUDE in x and PHOTOMETRY.TIME in x and x.get(
+                PHOTOMETRY.U_TIME, '') == 'MJD' and PHOTOMETRY.UPPER_LIMIT
+                not in x and not x.get(PHOTOMETRY.INCLUDES_HOST, False))
+        ]
+        # Use photometry that includes host if no other photometry available.
+        if not eventphoto:
+            eventphoto = [
+                (x[PHOTOMETRY.U_TIME], Decimal(x[PHOTOMETRY.TIME])
+                 if not isinstance(x[PHOTOMETRY.TIME], list) else
+                 Decimal(np.mean([float(y) for y in x[PHOTOMETRY.TIME]])),
+                 Decimal(x[PHOTOMETRY.MAGNITUDE]), x.get(PHOTOMETRY.BAND, ''),
+                 x[PHOTOMETRY.SOURCE]) for x in self[self._KEYS.PHOTOMETRY]
+                if (PHOTOMETRY.MAGNITUDE in x and PHOTOMETRY.TIME in x and
+                    x.get(PHOTOMETRY.U_TIME, '') == 'MJD' and not x.get(
+                        PHOTOMETRY.INCLUDES_HOST, False))
+            ]
+        if not eventphoto:
+            return None, None, None, None
+
+        mlmag = None
+
+        if visual:
+            for mb in MAX_VISUAL_BANDS:
+                leventphoto = [x for x in eventphoto if x[3] in mb]
+                if leventphoto:
+                    mlmag = min([x[2] for x in leventphoto])
+                    eventphoto = leventphoto
+                    break
+
+        if not mlmag:
+            mlmag = min([x[2] for x in eventphoto])
+
+        mlindex = [x[2] for x in eventphoto].index(mlmag)
+        mlband = eventphoto[mlindex][3]
+        mlsource = eventphoto[mlindex][4]
+
+        if eventphoto[mlindex][0] == 'MJD':
+            mlmjd = float(eventphoto[mlindex][1])
+            mlmjd = astrotime(mlmjd, format='mjd').datetime
+            return mlmjd, mlmag, mlband, mlsource
+        else:
+            return None, mlmag, mlband, mlsource
+
+    def _get_first_light(self):
+        if self._KEYS.PHOTOMETRY not in self:
+            return None, None
+
+        eventphoto = [(Decimal(x[PHOTOMETRY.TIME])
+                       if not isinstance(x[PHOTOMETRY.TIME], list) else
+                       Decimal(min(float(y) for y in x[PHOTOMETRY.TIME])),
+                       x[PHOTOMETRY.SOURCE])
+                      for x in self[self._KEYS.PHOTOMETRY]
+                      if PHOTOMETRY.UPPER_LIMIT not in x and PHOTOMETRY.TIME in
+                      x and x.get(PHOTOMETRY.U_TIME, '') == 'MJD' and
+                      PHOTOMETRY.INCLUDES_HOST not in x]
+        # Use photometry that includes host if no other photometry available.
+        if not eventphoto:
+            eventphoto = [
+                (Decimal(x[PHOTOMETRY.TIME])
+                 if not isinstance(x[PHOTOMETRY.TIME], list) else
+                 Decimal(min(float(y) for y in x[PHOTOMETRY.TIME])),
+                 x[PHOTOMETRY.SOURCE]) for x in self[self._KEYS.PHOTOMETRY]
+                if PHOTOMETRY.UPPER_LIMIT not in x and PHOTOMETRY.TIME in x and
+                x.get(PHOTOMETRY.U_TIME, '') == 'MJD'
+            ]
+        if not eventphoto:
+            return None, None
+        flmjd = min([x[0] for x in eventphoto])
+        flindex = [x[0] for x in eventphoto].index(flmjd)
+        flmjd = astrotime(float(flmjd), format='mjd').datetime
+        flsource = eventphoto[flindex][1]
+        return flmjd, flsource
+
+    def set_first_max_light(self):
+        if FASTSTARS.MAX_APP_MAG not in self:
+            # Get the maximum amongst all bands
+            mldt, mlmag, mlband, mlsource = self._get_max_light()
+            if mldt or mlmag or mlband:
+                source = self.add_self_source()
+                uniq_src = uniq_cdl([source] + mlsource.split(','))
+            if mldt:
+                max_date = make_date_string(mldt.year, mldt.month, mldt.day)
+                self.add_quantity(
+                    FASTSTARS.MAX_DATE, max_date, uniq_src, derived=True)
+            if mlmag:
+                mlmag = pretty_num(mlmag)
+                self.add_quantity(
+                    FASTSTARS.MAX_APP_MAG, mlmag, uniq_src, derived=True)
+            if mlband:
+                self.add_quantity(
+                    FASTSTARS.MAX_BAND, mlband, uniq_src, derived=True)
+        return
 
     def set_preferred_name(self):
         """Set preferred name of faststar.

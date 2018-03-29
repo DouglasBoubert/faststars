@@ -77,8 +77,34 @@ def do_cleanup(catalog):
                 if FASTSTARS.RA in catalog.entries[name]:
                     break
 
+        if (FASTSTARS.MAX_ABS_MAG not in catalog.entries[name] and
+                FASTSTARS.MAX_APP_MAG in catalog.entries[name] and
+                FASTSTARS.LUM_DIST in catalog.entries[name]):
+            # Find the "best" distance to use for this
+            bestsig = 0
+            for ld in catalog.entries[name][FASTSTARS.LUM_DIST]:
+                sig = get_sig_digits(ld[QUANTITY.VALUE])
+                if sig > bestsig:
+                    bestld = ld[QUANTITY.VALUE]
+                    bestsrc = ld[QUANTITY.SOURCE]
+                    bestsig = sig
+            if bestsig > 0 and is_number(bestld) and float(bestld) > 0.:
+                source = catalog.entries[name].add_self_source()
+                sources = uniq_cdl([source] + bestsrc.split(','))
+                bestldz = z_at_value(cosmo.luminosity_distance,
+                                     float(bestld) * un.Mpc)
+                pnum = (
+                    float(catalog.entries[name][FASTSTARS.MAX_APP_MAG][0][
+                        QUANTITY.VALUE]) - 5.0 *
+                    (log10(float(bestld) * 1.0e6) - 1.0
+                     ) + 2.5 * log10(1.0 + bestldz))
+                pnum = pretty_num(pnum, sig=bestsig + 1)
+                catalog.entries[name].add_quantity(
+                    FASTSTARS.MAX_ABS_MAG, pnum, sources, derived=True)
+
         catalog.entries[name].sanitize()
         catalog.journal_entries(bury=True, final=True, gz=True)
+
         cleanupcnt = cleanupcnt + 1
         if catalog.args.travis and cleanupcnt % 1000 == 0:
             break
