@@ -7,6 +7,7 @@ from astropy.coordinates import SkyCoord as coord
 import astropy.units as un
 from astroquery.gaia import Gaia
 from astropy.table import vstack
+import warnings
 
 from astrocats.catalog.photometry import PHOTOMETRY
 from astrocats.catalog.utils import is_number, pbar, single_spaces, uniq_cdl
@@ -36,6 +37,11 @@ silentgaiaquery = silent(Gaia.query_object)
 
 
 def do_gaia(catalog):
+    # Disable warnings
+    warnings.filterwarnings("ignore")
+    catalog.log.warning(
+                'Some warnings are thrown by the Gaia module which do not affect the result of the Gaia queries.')
+    
     task_str = catalog.get_current_task_str()
     keys = list(catalog.entries.keys())
 
@@ -80,4 +86,7 @@ def do_gaia(catalog):
     catalog.log.warning(
                 '"{}" have Gaia photometry and "{}" have Gaia astrometry.'.format(cntgphot,cntgast)) 
     catalog.journal_entries()
+    
+    # Reactivate warnings
+    warnings.filterwarnings("default")
     return
