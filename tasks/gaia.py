@@ -12,7 +12,7 @@ import warnings
 from astrocats.catalog.photometry import PHOTOMETRY
 from astrocats.catalog.utils import is_number, pbar, single_spaces, uniq_cdl
 from ..faststars import FASTSTARS
-from ..utils import name_clean
+from ..utils import name_clean, parallax_to_distance
 
 # astroquery.gaia is very verbose
 import sys
@@ -83,6 +83,19 @@ def do_gaia(catalog):
                     catalog.entries[name].add_quantity(FASTSTARS.PROPER_MOTION_RA, str(result['pmra'][0]), source, e_value=str(result['pmra_error'][0]), u_value='mas/yr')
                     catalog.entries[name].add_quantity(FASTSTARS.PROPER_MOTION_DEC, str(result['pmdec'][0]), source, e_value=str(result['pmdec_error'][0]), u_value='mas/yr')
                     catalog.entries[name].add_quantity(FASTSTARS.PARALLAX, str(result['parallax'][0]), source, e_value=str(result['parallax_error'][0]), u_value='mas')
+                   
+                    # Convert parallax to distance
+                    if (FASTSTARS.LUM_DIST in catalog.entries[name]):
+                        catalog.log.warning(
+                        '"{}" has distance from photmetric distance prior.'.format(name)) 
+                        distance, distance_error = parallax_to_distance(result['parallax'][0],result['parallax_error'][0],float(catalog.entries[name][FASTSTARS.LUM_DIST][0]['value']),float(catalog.entries[name][FASTSTARS.LUM_DIST][0]['e_value']))
+                        catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(distance), e_value=str(distance_error), u_value='kpc', source=source, derived=True)
+                    else:
+                        catalog.log.warning(
+                        '"{}" has distance from Astraatmadja & Bailer-Jones (2016) prior.'.format(name)) 
+                        distance, distance_error = parallax_to_distance(result['parallax'][0],result['parallax_error'][0])
+                        catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(distance), e_value=str(distance_error), u_value='kpc', source=source, derived=True)
+                        
     catalog.log.warning(
                 '"{}" have Gaia photometry and "{}" have Gaia astrometry.'.format(cntgphot,cntgast)) 
     catalog.journal_entries()
