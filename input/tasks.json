@@ -10,7 +10,7 @@
     },
     "ascii": {
         "nice_name": "%pre ASCII",
-        "active": false,
+        "active": true,
         "update": false,
         "module": "faststars.tasks.ascii",
         "function": "do_ascii",
@@ -46,7 +46,7 @@
     },
     "dust": {
         "nice_name": "Querying for dust",
-        "active": false,
+        "active": true,
         "update": false,
         "module": "faststars.tasks.dust",
         "function": "do_dust",
@@ -55,7 +55,7 @@
     },
     "sdss": {
         "nice_name": "Querying against SDSS",
-        "active": false,
+        "active": true,
         "update": false,
         "module": "faststars.tasks.sdss",
         "function": "do_sdss",
