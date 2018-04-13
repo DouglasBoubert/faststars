@@ -10,7 +10,7 @@
     },
     "ascii": {
         "nice_name": "%pre ASCII",
-        "active": false,
+        "active": true,
         "update": false,
         "module": "faststars.tasks.ascii",
         "function": "do_ascii",
@@ -44,18 +44,9 @@
         "groups": ["meta"],
         "priority": -10
     },
-    "dust": {
-        "nice_name": "Querying for dust",
-        "active": false,
-        "update": false,
-        "module": "faststars.tasks.dust",
-        "function": "do_dust",
-        "groups": ["meta"],
-        "priority": -9
-    },
     "sdss": {
         "nice_name": "Querying against SDSS",
-        "active": false,
+        "active": true,
         "update": false,
         "module": "faststars.tasks.sdss",
         "function": "do_sdss",
@@ -64,11 +55,29 @@
     },
     "gaia": {
         "nice_name": "Querying against Gaia",
-        "active": true,
+        "active": false,
         "update": false,
         "module": "faststars.tasks.gaia",
         "function": "do_gaia",
         "groups": ["meta"],
         "priority": -7
+    },
+    "gaiaviavizier": {
+        "nice_name": "Querying against Gaia via Vizier",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.gaiaviavizier",
+        "function": "do_gaiaviavizier",
+        "groups": ["meta"],
+        "priority": -7
+    },
+    "dust": {
+        "nice_name": "Querying for dust",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.dust",
+        "function": "do_dust",
+        "groups": ["meta"],
+        "priority": -1
     }
 }

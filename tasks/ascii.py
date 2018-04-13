@@ -36,9 +36,10 @@ def do_ascii(catalog):
         name, source = catalog.new_entry(oname, bibcode='2007ApJ...660..311B')
         gallon = float(str(row['Glon']))
         gallat = float(str(row['Glat']))
-        ra, dec = coord(
-            l=gallon * u.degree, b=gallat * u.degree,
-            frame='galactic').icrs.to_string(
+        radec = oname.strip('SDSSJ')
+        radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
+        ra, dec = coord(radec, 
+                unit=(u.hourangle, u.deg)).to_string(
                 'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
@@ -51,7 +52,7 @@ def do_ascii(catalog):
         dhel_MS = rgc_to_dhel(galrad_MS,gallon,gallat)
         dhel_BHB = rgc_to_dhel(galrad_BHB,gallon,gallat)
         catalog.entries[name].add_quantity(
-            FASTSTARS.LUM_DIST, str(dhel_MS), lower_limit=str(dhel_BHB), u_value='kpc', source=source)
+            FASTSTARS.LUM_DIST, str(dhel_MS), lower_limit=str(dhel_BHB), u_value='kpc', source=source,derived=True)
         catalog.entries[name].add_quantity(
             FASTSTARS.CLAIMED_TYPE, "pBHVS", source=source)
     catalog.journal_entries()
@@ -65,14 +66,16 @@ def do_ascii(catalog):
         name, source = catalog.new_entry(oname, bibcode='2009ApJ...690.1369B')
         gallon = float(str(row['Glon']))
         gallat = float(str(row['Glat']))
-        ra, dec = coord(
-            l=gallon * u.degree, b=gallat * u.degree,
-            frame='galactic').icrs.to_string(
+        if (oname!='US708') & (oname!='HE0437-5439'):
+            radec = oname.strip('SDSSJ')
+            radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
+            ra, dec = coord(radec, 
+                unit=(u.hourangle, u.deg)).to_string(
                 'hmsdms', sep=':').split()
-        catalog.entries[name].add_quantity(
-            FASTSTARS.RA, ra, source=source)
-        catalog.entries[name].add_quantity(
-            FASTSTARS.DEC, dec, source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.RA, ra, source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.DEC, dec, source=source)
         if str(row['e_Vhel'])!='NA':
             catalog.entries[name].add_quantity(
                 FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
@@ -82,7 +85,7 @@ def do_ascii(catalog):
         galrad = float(str(row['RGC']))
         dhel = rgc_to_dhel(galrad,gallon,gallat)
         catalog.entries[name].add_quantity(
-            FASTSTARS.LUM_DIST, str(dhel), u_value='kpc', source=source)
+            FASTSTARS.LUM_DIST, str(dhel), u_value='kpc', source=source,derived=True)
         catalog.entries[name].add_quantity(
             FASTSTARS.SPECTRAL_TYPE, row['Type'], source=source)
         if str(row['ID'])[:3]=='HVS':
@@ -136,14 +139,16 @@ def do_ascii(catalog):
         name, source = catalog.new_entry(oname, bibcode='2012ApJ...751...55B')
         gallon = float(str(row['Glon']))
         gallat = float(str(row['Glat']))
-        ra, dec = coord(
-            l=gallon * u.degree, b=gallat * u.degree,
-            frame='galactic').icrs.to_string(
+        if (oname!='US708') & (oname!='HE0437-5439'):
+            radec = oname.strip('SDSSJ')
+            radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
+            ra, dec = coord(radec, 
+                unit=(u.hourangle, u.deg)).to_string(
                 'hmsdms', sep=':').split()
-        catalog.entries[name].add_quantity(
-            FASTSTARS.RA, ra, source=source)
-        catalog.entries[name].add_quantity(
-            FASTSTARS.DEC, dec, source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.RA, ra, source=source)
+            catalog.entries[name].add_quantity(
+                FASTSTARS.DEC, dec, source=source)
         if str(row['e_Vhel'])!='NA':
             catalog.entries[name].add_quantity(
                 FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
@@ -155,7 +160,7 @@ def do_ascii(catalog):
         galrad = float(str(row['RGC']))
         dhel = rgc_to_dhel(galrad,gallon,gallat)
         catalog.entries[name].add_quantity(
-            FASTSTARS.LUM_DIST, str(dhel), u_value='kpc', source=source)
+            FASTSTARS.LUM_DIST, str(dhel), u_value='kpc', source=source, derived=True)
         if str(row['ID'])[:3]=='HVS':
             catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, "HVS", source=source)
@@ -407,7 +412,7 @@ def do_ascii(catalog):
             FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec']).strip(' '), e_value=str(row['e_pmdec']).strip(' '), u_value='mas/yr', source=source)
         if str(row['newspec']) == 'y':
             radec = oname.strip('SDSSJ')
-            ra, dec = radec[:10], radec[10:]
+            ra, dec = radec[:11], radec[11:]
             catalog.entries[name].add_quantity(
                 FASTSTARS.RA, ra, source=source)
             catalog.entries[name].add_quantity(
