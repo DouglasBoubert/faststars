@@ -28,6 +28,9 @@ class FASTSTARS(ENTRY):
     PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC,
         replace_better=True)
     PARALLAX = Key('parallax', KEY_TYPES.NUMERIC)
+    MASS = Key('mass', KEY_TYPES.NUMERIC)
+    LOGG = Key('logg', KEY_TYPES.NUMERIC)
+    TEFF = Key('teff', KEY_TYPES.NUMERIC)
     CLAIMED_TYPE = Key('claimedtype',
                        KEY_TYPES.STRING,
                        kind_preference=['HVS'],
