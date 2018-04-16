@@ -12,6 +12,7 @@ import warnings
 
 from astrocats.catalog.photometry import PHOTOMETRY
 from astrocats.catalog.utils import is_number, pbar, single_spaces, uniq_cdl
+from astrocats.catalog.correlation import CORRELATION
 from ..faststars import FASTSTARS
 from ..utils import name_clean, parallax_to_distance
 
@@ -35,8 +36,10 @@ def silent(fn):
     return silent_fn
     
 #silentgaiaquery = silent(Gaia.query_object)
-v=Vizier(columns=['RA_ICRS','DE_ICRS','Plx','pmRA','pmDE','<Gmag>','e_RA_ICRS','e_DE_ICRS','e_Plx','e_pmRA','e_pmDE','RADEcor','RAPlxcor','RApmRAcor','RApmDEcor','DEPlxcor','DEpmRAcor','DEpmDEcor','PlxpmRAcor','PlxpmDEcor','pmRApmDEcor'])
-silentgaiaquery = silent(v.query_region)
+#v=Vizier(columns=['RA_ICRS','DE_ICRS','Plx','pmRA','pmDE','<Gmag>','e_RA_ICRS','e_DE_ICRS','e_Plx','e_pmRA','e_pmDE','RADEcor','RAPlxcor','RApmRAcor','RApmDEcor','DEPlxcor','DEpmRAcor','DEpmDEcor','PlxpmRAcor','PlxpmDEcor','pmRApmDEcor'])
+v=Vizier(columns=['**'])
+#silentgaiaquery = silent(v.query_region)
+silentgaiaquery = v.query_region
 
 
 def do_gaiaviavizier(catalog):
@@ -85,11 +88,27 @@ def do_gaiaviavizier(catalog):
                 if result['Plx'][0] != '--':
                     cntgast += 1
                     catalog.log.warning(
-                        '"{}" has Gaia astrometry.'.format(name)) 
-                    catalog.entries[name].add_quantity(FASTSTARS.PROPER_MOTION_RA, str(result['pmRA'][0]), source, e_value=str(result['e_pmRA'][0]), u_value='mas/yr')
-                    catalog.entries[name].add_quantity(FASTSTARS.PROPER_MOTION_DEC, str(result['pmDE'][0]), source, e_value=str(result['e_pmDE'][0]), u_value='mas/yr')
-                    catalog.entries[name].add_quantity(FASTSTARS.PARALLAX, str(result['Plx'][0]), source, e_value=str(result['e_Plx'][0]), u_value='mas')
-                   
+                        '"{}" has Gaia astrometry.'.format(name))
+                    def gtab(parstring):
+                        return str(result[parstring][0])
+                    print(result)
+                    ast_keys = [FASTSTARS.RA,FASTSTARS.DEC,FASTSTARS.PARALLAX,FASTSTARS.PROPER_MOTION_RA,FASTSTARS.PROPER_MOTION_DEC]
+                    ast_values = [gtab('RA_ICRS'),gtab('DE_ICRS'),gtab('Plx'),gtab('pmRA'),gtab('pmDE')]
+                    ast_errors = [gtab('e_RA_ICRS'),gtab('e_DE_ICRS'),gtab('e_Plx'),gtab('e_pmRA'),gtab('e_pmDE')]
+                    ast_corr = [['1.0',gtab('RADEcor'),gtab('RAPlxcor'),gtab('RApmRAcor'),gtab('RApmDEcor')], [gtab('RADEcor'),'1.0',gtab('DEPlxcor'),gtab('DEpmRAcor'),gtab('DEpmDEcor')], [gtab('RAPlxcor'),gtab('DEPlxcor'),'1.0',gtab('PlxpmRAcor'),gtab('PlxpmDEcor')], [gtab('RApmRAcor'),gtab('DEpmRAcor'),gtab('PlxpmRAcor'),'1.0',gtab('pmRApmDEcor')], [gtab('RApmDEcor'),gtab('DEpmDEcor'),gtab('PlxpmDEcor'),gtab('pmRApmDEcor'),'1.0']]
+                    ast_names = ['ra','dec','parallax','propermotionra','propermotiondec']
+                    ast_units = ['deg','deg','mas','mas/yr','mas/yr']
+                    
+                    n_ast = len(ast_keys) # number of columns
+                    for i in range(n_ast):
+                        corr_dict = [{CORRELATION.VALUE:ast_corr[i][(i+j) % n_ast], CORRELATION.QUANTITY:ast_names[(i+j) % n_ast], CORRELATION.KIND:'Pearson'} for j in list(range(1,n_ast))]
+                        catalog.entries[name].add_quantity(ast_keys[i], ast_values[i], source, e_value=ast_errors[i], u_value=ast_units[i], correlations=corr_dict)
+                    
+                    #catalog.entries[name].add_quantity(FASTSTARS.PROPER_MOTION_RA, gtab('pmRA'), source, e_value=gtab('e_pmRA'), u_value='mas/yr')
+                    #catalog.entries[name].add_quantity(FASTSTARS.PROPER_MOTION_DEC, gtab('pmDE'), source, e_value=gtab('e_pmDE'), u_value='mas/yr')
+                    #catalog.entries[name].add_quantity(FASTSTARS.PARALLAX, gtab('Plx'), source, e_value=gtab('e_Plx'), u_value='mas')
+                    
+                    
                     # Convert parallax to distance
                     if (FASTSTARS.LUM_DIST in catalog.entries[name]):
                         catalog.log.warning(
