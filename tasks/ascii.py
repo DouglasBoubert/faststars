@@ -196,7 +196,9 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
             FASTSTARS.CLAIMED_TYPE, "pHVS", source=source)
         catalog.entries[name].add_quantity(
-            FASTSTARS.SPECTRAL_TYPE, "G/K", source=source)
+            FASTSTARS.SPECTRAL_TYPE, "G", source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.SPECTRAL_TYPE, "K", source=source)
     catalog.journal_entries()
     
     # 2014ApJ...787...89B
@@ -252,7 +254,9 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, 'pHVS', source=source)
         catalog.entries[name].add_quantity(
-                FASTSTARS.SPECTRAL_TYPE, 'K/M', source=source)
+                FASTSTARS.SPECTRAL_TYPE, 'K', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, 'M', source=source)
     catalog.journal_entries()
     
     # 2014ApJ...789L...2Z
@@ -457,7 +461,11 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, 'pHVS', source=source)
         catalog.entries[name].add_quantity(
-                FASTSTARS.SPECTRAL_TYPE, 'F/G/K', source=source)
+                FASTSTARS.SPECTRAL_TYPE, 'F', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, 'G', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, 'K', source=source)
     catalog.journal_entries()
     
     # 2015AJ....150...77V
@@ -480,7 +488,13 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, str(row['Claim']), source=source)
         catalog.entries[name].add_quantity(
-                FASTSTARS.SPECTRAL_TYPE, 'F/G/K/M', source=source)
+                FASTSTARS.SPECTRAL_TYPE, 'F', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, 'G', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, 'K', source=source)
+        catalog.entries[name].add_quantity(
+                FASTSTARS.SPECTRAL_TYPE, 'M', source=source)
     catalog.journal_entries()
     
     # 2015ApJ...813...26F
