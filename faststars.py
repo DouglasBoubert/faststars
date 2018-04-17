@@ -183,13 +183,16 @@ class FastStars(Entry):
                                 isworse = False
                         else:
                             checke = True
-                        if checke and QUANTITY.CORRELATIONS in ct:
+                        print(added_quantity)
+                        if checke and QUANTITY.CORRELATIONS in added_quantity:
                         ### Correlations are a trump card. Correlations trump everything. Most recent correlations wins.
-                            if QUANTITY.CORRELATIONS in added_quantity:
+                            if QUANTITY.CORRELATIONS in ct:
                                 if float(ct[QUANTITY.SOURCE][:4]) > float(added_quantity[QUANTITY.SOURCE][:4]):
                                     addct = True
                                 else:
                                     isworse = False
+                            else:
+                                isworse = False
                         elif checke and QUANTITY.E_VALUE in ct:
                             if QUANTITY.E_VALUE in added_quantity:
                                 if (float(added_quantity[QUANTITY.E_VALUE])

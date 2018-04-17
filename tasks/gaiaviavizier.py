@@ -5,7 +5,6 @@ import re
 import numpy as np
 from astropy.coordinates import SkyCoord as coord
 import astropy.units as un
-from astroquery.gaia import Gaia
 from astroquery.vizier import Vizier
 from astropy.table import vstack
 import warnings
@@ -91,7 +90,6 @@ def do_gaiaviavizier(catalog):
                         '"{}" has Gaia astrometry.'.format(name))
                     def gtab(parstring):
                         return str(result[parstring][0])
-                    print(result)
                     ast_keys = [FASTSTARS.RA,FASTSTARS.DEC,FASTSTARS.PARALLAX,FASTSTARS.PROPER_MOTION_RA,FASTSTARS.PROPER_MOTION_DEC]
                     ast_values = [gtab('RA_ICRS'),gtab('DE_ICRS'),gtab('Plx'),gtab('pmRA'),gtab('pmDE')]
                     ast_errors = [gtab('e_RA_ICRS'),gtab('e_DE_ICRS'),gtab('e_Plx'),gtab('e_pmRA'),gtab('e_pmDE')]
