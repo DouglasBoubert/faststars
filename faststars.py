@@ -36,8 +36,7 @@ class FASTSTARS(ENTRY):
                        kind_preference=['HVS'],
                        replace_better=True)
     SPECTRAL_TYPE = Key('spectraltype',
-                        KEY_TYPES.STRING,
-                        replace_better=True)
+                        KEY_TYPES.STRING)
     ERRORS = Key('errors')
 
 
@@ -183,7 +182,6 @@ class FastStars(Entry):
                                 isworse = False
                         else:
                             checke = True
-                        print(added_quantity)
                         if checke and QUANTITY.CORRELATIONS in added_quantity:
                         ### Correlations are a trump card. Correlations trump everything. Most recent correlations wins.
                             if QUANTITY.CORRELATIONS in ct:
