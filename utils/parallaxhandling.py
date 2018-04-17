@@ -14,7 +14,17 @@ nstep = 50
 ndim, nwalkers = 1, 100
 N = nstep*nwalkers
 
-def parallax_to_distance(PARALLAX,PARALLAX_ERROR,PHOTD=None,PHOTD_ERROR=None):
+def parallax_to_distance(NAME,PARALLAX,PARALLAX_ERROR,PHOTD=None,PHOTD_ERROR=None):
+    # Set random number generator based on name
+    seed = NAME
+    def craft_seed(SEED):
+        nSEED = len(SEED)
+        # The modulo ensures we don't overrun.
+        indSEED = range(2*(nSEED+3))
+        return np.prod(np.array([ord(SEED[i%nSEED]) for i in indSEED])) % 4294967296
+    init_random_state = np.random.RandomState(seed=craft_seed(seed))
+    samp_random_state = np.random.RandomState(seed=craft_seed(seed[::-1]))
+
     # Branch depending on whether we are using exponentially decreasing or photometric distance prior
     if PHOTD == None:
         # No photometric distance estimate, using Astraatmadja & Bailer-Jones (2016) prior
@@ -37,11 +47,11 @@ def parallax_to_distance(PARALLAX,PARALLAX_ERROR,PHOTD=None,PHOTD_ERROR=None):
     # Identify maximum-likelihood location for initial positions
     r = np.roots(coeff)
     real_r = r.real[abs(r.imag)<1e-5]
-    p0 = [max(real_r)+1e-1*np.random.randn(1) for i in range(nwalkers)]
+    p0 = [max(real_r)+1e-1*init_random_state.randn(1) for i in range(nwalkers)]
     
     # Sample with burn-in
     sampler = emcee.EnsembleSampler(nwalkers, ndim, lnprob)
-    pos, prob, state = sampler.run_mcmc(p0, nstep_burn)
+    pos, prob, state = sampler.run_mcmc(p0, nstep_burn, rstate0=samp_random_state.get_state())
     sampler.reset()
     sampler.run_mcmc(pos, nstep)
     distance=sampler.flatchain
