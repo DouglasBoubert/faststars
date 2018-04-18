@@ -225,7 +225,7 @@ def do_ascii(catalog):
         dhel_lo = rgc_to_dhel(galrad-errgalrad,gallon,gallat)
         dhel_hi = rgc_to_dhel(galrad+errgalrad,gallon,gallat)
         catalog.entries[name].add_quantity(
-            FASTSTARS.LUM_DIST, str(dhel), e_lower_value=dhel-dhel_lo, e_upper_value=dhel_hi-dhel, u_value='kpc', source=source)
+            FASTSTARS.LUM_DIST, str(dhel), e_lower_value=dhel-dhel_lo, e_upper_value=dhel_hi-dhel, u_value='kpc', source=source, derived=True)
         if str(row['ID'])!='pBHVS':
             catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, "HVS", source=source)

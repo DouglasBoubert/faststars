@@ -27,7 +27,8 @@ class FASTSTARS(ENTRY):
         replace_better=True)
     PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC,
         replace_better=True)
-    PARALLAX = Key('parallax', KEY_TYPES.NUMERIC)
+    PARALLAX = Key('parallax', KEY_TYPES.NUMERIC,
+        replace_better=True)
     MASS = Key('mass', KEY_TYPES.NUMERIC)
     LOGG = Key('logg', KEY_TYPES.NUMERIC)
     TEFF = Key('teff', KEY_TYPES.NUMERIC)
@@ -37,6 +38,9 @@ class FASTSTARS(ENTRY):
                        replace_better=True)
     SPECTRAL_TYPE = Key('spectraltype',
                         KEY_TYPES.STRING)
+    BOUND_PROBABILITY = Key('boundprobability',KEY_TYPES.NUMERIC)
+    ESCAPE_VELOCITY = Key('escapevelocity',KEY_TYPES.NUMERIC)
+    GALACTOCENTRIC_VELOCITY = Key('galactocentricvelocity',KEY_TYPES.NUMERIC)
     ERRORS = Key('errors')
 
 
@@ -183,6 +187,7 @@ class FastStars(Entry):
                         else:
                             checke = True
                         if checke and QUANTITY.CORRELATIONS in added_quantity:
+                            print(added_quantity[QUANTITY.SOURCE])
                         ### Correlations are a trump card. Correlations trump everything. Most recent correlations wins.
                             if QUANTITY.CORRELATIONS in ct:
                                 if float(ct[QUANTITY.SOURCE][:4]) > float(added_quantity[QUANTITY.SOURCE][:4]):

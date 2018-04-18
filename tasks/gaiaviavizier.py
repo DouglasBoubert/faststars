@@ -91,8 +91,8 @@ def do_gaiaviavizier(catalog):
                         source=source)
                 gra,gde = coord(ra=float(gtab('RA_ICRS'))*un.deg,dec=float(gtab('DE_ICRS'))*un.deg,frame='icrs').to_string('hmsdms', sep=':').split()
                 if gtab('Plx') == '--':
-                    catalog.entries[name].add_quantity(FASTSTARS.RA,gra, source, e_value=gtab('e_RA_ICRS'), u_value='mas')
-                    catalog.entries[name].add_quantity(FASTSTARS.DEC,gde, source, e_value=gtab('e_DE_ICRS'), u_value='mas')
+                    catalog.entries[name].add_quantity(FASTSTARS.RA,gra, source, e_value=gtab('e_RA_ICRS'), u_e_value='mas')
+                    catalog.entries[name].add_quantity(FASTSTARS.DEC,gde, source, e_value=gtab('e_DE_ICRS'), u_e_value='mas')
                 else:
                     print(gtab('Plx'))
                     cntgast += 1
