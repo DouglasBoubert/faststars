@@ -78,6 +78,15 @@
         "module": "faststars.tasks.dust",
         "function": "do_dust",
         "groups": ["meta"],
+        "priority": -2
+    },
+    "boundprobability": {
+        "nice_name": "Calculating bound probability",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.boundprobability",
+        "function": "do_boundprobability",
+        "groups": ["meta"],
         "priority": -1
     }
 }
