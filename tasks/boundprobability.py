@@ -7,6 +7,7 @@ from astropy.coordinates import SkyCoord as coord
 import astropy.units as un
 from math import sin, cos, sqrt
 from galpy.potential import MWPotential2014, vesc
+from scipy.stats import beta
 
 from astrocats.catalog.photometry import PHOTOMETRY
 from astrocats.catalog.utils import is_number, pbar, single_spaces, uniq_cdl
@@ -34,6 +35,7 @@ T_3 = np.matrix([ [ np.cos(ra_ngp) , np.sin(ra_ngp) , 0. ], [ np.sin(ra_ngp) , -
 T=T_1*T_2*T_3
 
 errorifmissing = 0.5
+confidenceintervalcoverage = 0.6827
     
 def best_parameter(PARAMETER):
     nPARAMETER = len(PARAMETER)
@@ -207,8 +209,10 @@ def do_boundprobability(catalog):
             kine_vesc = vesc(MWPotential2014,kine_galrad*un.kpc)*kine_samples_solar[:,1]
             
             # Bound probability
-            kine_boundprobability = np.where( kine_vesc > kine_vgrf )[0].shape[0]/kine_samples_n
-            kine_boundprobability_error = sqrt(kine_boundprobability*(1.0-kine_boundprobability)/kine_samples_n)
+            kine_bound_n = np.where( kine_vesc > kine_vgrf )[0].shape[0]
+            kine_betaa = kine_bound_n+0.5
+            kine_betab = kine_samples_n-kine_bound_n+0.5
+            kine_bound_percentiles = [beta.ppf(confidenceintervalcoverage/2.0,kine_betaa,kine_betab),beta.ppf(0.5,kine_betaa,kine_betab),beta.ppf(1.0-confidenceintervalcoverage/2.0,kine_betaa,kine_betab)]
             
             # Debugging
             #print(kine_values)
@@ -222,9 +226,11 @@ def do_boundprobability(catalog):
             # Store all outcomes.
             source = catalog.entries[name].add_self_source()
             boundprobability_upperlimit = (havepropermotions == False or havevelocities == False)
-            catalog.entries[name].add_quantity(FASTSTARS.BOUND_PROBABILITY, str(kine_boundprobability), e_value=str(kine_boundprobability_error), upperlimit = boundprobability_upperlimit, source=source, derived=True)
+            catalog.entries[name].add_quantity(FASTSTARS.BOUND_PROBABILITY, str(kine_bound_percentiles[1]), e_lower_value=str(kine_bound_percentiles[0]), e_upper_value=str(kine_bound_percentiles[2]), upperlimit = boundprobability_upperlimit, source=source, derived=True)
             catalog.entries[name].add_quantity(FASTSTARS.ESCAPE_VELOCITY, str(kine_vesc.mean()), e_value=str(kine_vesc.std()), u_value='km/s', source=source, derived=True)
             catalog.entries[name].add_quantity(FASTSTARS.VELOCITY, str(kine_vgrf.mean()), e_value=str(kine_vgrf.std()), u_value='km/s', lowerlimit = boundprobability_upperlimit, source=source, derived=True, kind='galactocentric')
+            catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(kine_samples_corrected[:,0].mean()), e_value=str(kine_samples_corrected[:,0].std()), u_value='kpc', source=source, derived=True)
     catalog.journal_entries()
+    
     
     return

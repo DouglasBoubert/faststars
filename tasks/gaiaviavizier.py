@@ -112,17 +112,18 @@ def do_gaiaviavizier(catalog):
                         corr_dict = [{CORRELATION.VALUE:ast_corr[i][(i+j) % n_ast], CORRELATION.QUANTITY:ast_names[(i+j) % n_ast], CORRELATION.KIND:'Pearson'} for j in list(range(1,n_ast))]
                         catalog.entries[name].add_quantity(ast_keys[i], ast_values[i], source, e_value=ast_errors[i], u_value=ast_units[i], correlations=corr_dict)
                     
+                    ##### This has been moved to boundprobability.py
                     # Convert parallax to distance
-                    if (FASTSTARS.LUM_DIST in catalog.entries[name]):
-                        catalog.log.warning(
-                        '"{}" has distance from photmetric distance prior.'.format(name)) 
-                        distance, distance_error = parallax_to_distance(name,result['Plx'][0],result['e_Plx'][0],float(catalog.entries[name][FASTSTARS.LUM_DIST][0]['value']),float(catalog.entries[name][FASTSTARS.LUM_DIST][0]['e_value']))
-                        catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(distance), e_value=str(distance_error), u_value='kpc', source=source, derived=True)
-                    else:
-                        catalog.log.warning(
-                        '"{}" has distance from Astraatmadja & Bailer-Jones (2016) prior.'.format(name)) 
-                        distance, distance_error = parallax_to_distance(name,result['Plx'][0],result['e_Plx'][0])
-                        catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(distance), e_value=str(distance_error), u_value='kpc', source=source, derived=True)
+                    #if (FASTSTARS.LUM_DIST in catalog.entries[name]):
+                    #    catalog.log.warning(
+                    #    '"{}" has distance from photmetric distance prior.'.format(name)) 
+                    #    distance, distance_error = parallax_to_distance(name,result['Plx'][0],result['e_Plx'][0],float(catalog.entries[name][FASTSTARS.LUM_DIST][0]['value']),float(catalog.entries[name][FASTSTARS.LUM_DIST][0]['e_value']))
+                    #    catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(distance), e_value=str(distance_error), u_value='kpc', source=source, derived=True)
+                    #else:
+                    #    catalog.log.warning(
+                    #    '"{}" has distance from Astraatmadja & Bailer-Jones (2016) prior.'.format(name)) 
+                    #    distance, distance_error = parallax_to_distance(name,result['Plx'][0],result['e_Plx'][0])
+                    #    catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(distance), e_value=str(distance_error), u_value='kpc', source=source, derived=True)
                         
     catalog.log.warning(
                 '"{}" have Gaia photometry and "{}" have Gaia astrometry.'.format(cntgphot,cntgast)) 
