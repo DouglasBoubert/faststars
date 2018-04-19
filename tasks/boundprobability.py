@@ -226,7 +226,7 @@ def do_boundprobability(catalog):
             # Store all outcomes.
             source = catalog.entries[name].add_self_source()
             boundprobability_upperlimit = (havepropermotions == False or havevelocities == False)
-            catalog.entries[name].add_quantity(FASTSTARS.BOUND_PROBABILITY, str(kine_bound_percentiles[1]), e_lower_value=str(kine_bound_percentiles[0]), e_upper_value=str(kine_bound_percentiles[2]), upperlimit = boundprobability_upperlimit, source=source, derived=True)
+            catalog.entries[name].add_quantity(FASTSTARS.BOUND_PROBABILITY, str(kine_bound_percentiles[1]), e_lower_value=str(kine_bound_percentiles[0]-kine_bound_percentiles[1]), e_upper_value=str(kine_bound_percentiles[2]-kine_bound_percentiles[1]), upperlimit = boundprobability_upperlimit, source=source, derived=True)
             catalog.entries[name].add_quantity(FASTSTARS.ESCAPE_VELOCITY, str(kine_vesc.mean()), e_value=str(kine_vesc.std()), u_value='km/s', source=source, derived=True)
             catalog.entries[name].add_quantity(FASTSTARS.VELOCITY, str(kine_vgrf.mean()), e_value=str(kine_vgrf.std()), u_value='km/s', lowerlimit = boundprobability_upperlimit, source=source, derived=True, kind='galactocentric')
             catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(kine_samples_corrected[:,0].mean()), e_value=str(kine_samples_corrected[:,0].std()), u_value='kpc', source=source, derived=True)
