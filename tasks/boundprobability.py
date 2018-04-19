@@ -224,7 +224,7 @@ def do_boundprobability(catalog):
             boundprobability_upperlimit = (havepropermotions == False or havevelocities == False)
             catalog.entries[name].add_quantity(FASTSTARS.BOUND_PROBABILITY, str(kine_boundprobability), e_value=str(kine_boundprobability_error), upperlimit = boundprobability_upperlimit, source=source, derived=True)
             catalog.entries[name].add_quantity(FASTSTARS.ESCAPE_VELOCITY, str(kine_vesc.mean()), e_value=str(kine_vesc.std()), u_value='km/s', source=source, derived=True)
-            catalog.entries[name].add_quantity(FASTSTARS.GALACTOCENTRIC_VELOCITY, str(kine_vgrf.mean()), e_value=str(kine_vgrf.std()), u_value='km/s', lowerlimit = boundprobability_upperlimit, source=source, derived=True)
+            catalog.entries[name].add_quantity(FASTSTARS.VELOCITY, str(kine_vgrf.mean()), e_value=str(kine_vgrf.std()), u_value='km/s', lowerlimit = boundprobability_upperlimit, source=source, derived=True, kind='galactocentric')
     catalog.journal_entries()
     
     return

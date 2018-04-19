@@ -40,7 +40,6 @@ class FASTSTARS(ENTRY):
                         KEY_TYPES.STRING)
     BOUND_PROBABILITY = Key('boundprobability',KEY_TYPES.NUMERIC)
     ESCAPE_VELOCITY = Key('escapevelocity',KEY_TYPES.NUMERIC)
-    GALACTOCENTRIC_VELOCITY = Key('galactocentricvelocity',KEY_TYPES.NUMERIC)
     ERRORS = Key('errors')
 
 
