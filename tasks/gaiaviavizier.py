@@ -106,7 +106,7 @@ def do_gaiaviavizier(catalog):
                     ast_names = ['ra','dec','parallax','propermotionra','propermotiondec']
                     ast_units = ['mas','mas','mas','mas/yr','mas/yr']
                     
-                    print(ast_values[0])
+                    #print(ast_values[0])
                     n_ast = len(ast_keys) # number of columns
                     for i in range(n_ast):
                         corr_dict = [{CORRELATION.VALUE:ast_corr[i][(i+j) % n_ast], CORRELATION.QUANTITY:ast_names[(i+j) % n_ast], CORRELATION.KIND:'Pearson'} for j in list(range(1,n_ast))]
