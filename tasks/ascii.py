@@ -376,7 +376,7 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
             FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec']).strip(' '), e_value=str(row['e_pmdec']).strip(' '), u_value='mas/yr', source=source)
         catalog.entries[name].add_quantity(
-            FASTSTARS.LUM_DIST, str(row['Dhel']).strip(' '), e_value=str(row['e_Dhel']).strip(' '), u_value='pc', source=source)
+            FASTSTARS.LUM_DIST, str(float(row['Dhel'])/1e3).strip(' '), e_value=str(float(row['e_Dhel'])/1e3).strip(' '), u_value='kpc', source=source)
         catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, str(row['Claim']).strip(' '), source=source)
     catalog.journal_entries()
@@ -523,7 +523,7 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
             FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec1']), e_value=str(row['e_pmdec1']), u_value='mas/yr', source=source)
         catalog.entries[name].add_quantity(
-            FASTSTARS.LUM_DIST, str(row['Dhel']), e_value=str(row['e_Dhel']), u_value='pc', source=source)
+            FASTSTARS.LUM_DIST, str(float(row['Dhel'])/1e3), e_value=str(float(row['e_Dhel'])/1e3), u_value='kpc', source=source)
         if str(row['Unbound'])=='yes':
             catalog.entries[name].add_quantity(
                 FASTSTARS.CLAIMED_TYPE, 'pHVS', source=source)
