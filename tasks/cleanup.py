@@ -41,6 +41,21 @@ def do_cleanup(catalog):
         name = catalog.entries[name].set_preferred_name()
 
         aliases = catalog.entries[name].get_aliases()
+        catalog.entries[name].set_first_max_light()
+
+        # Convert all distances to kpc.
+        if FASTSTARS.LUM_DIST in catalog.entries[name]:
+            for li, ld in enumerate(catalog.entries[name][FASTSTARS.LUM_DIST]):
+                if ld.get('u_value') != 'kpc':
+                    if ld.get('u_value') == 'pc':
+                        catalog.entries[name][FASTSTARS.LUM_DIST][li]['value'] = str(Decimal(
+                            catalog.entries[name][FASTSTARS.LUM_DIST][li]['value']) * Decimal('0.001'))
+                    elif ld.get('u_value') == 'Mpc':
+                        catalog.entries[name][FASTSTARS.LUM_DIST][li]['value'] = str(Decimal(
+                            catalog.entries[name][FASTSTARS.LUM_DIST][li]['value']) * Decimal('1000'))
+                    else:
+                        raise ValueError('unknown distance unit')
+                    catalog.entries[name][FASTSTARS.LUM_DIST][li]['u_value'] = 'kpc'
 
         if (FASTSTARS.RA not in catalog.entries[name] or
                 FASTSTARS.DEC not in catalog.entries[name]):
