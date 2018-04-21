@@ -32,10 +32,6 @@ class FASTSTARS(ENTRY):
     MASS = Key('mass', KEY_TYPES.NUMERIC)
     LOGG = Key('logg', KEY_TYPES.NUMERIC)
     TEFF = Key('teff', KEY_TYPES.NUMERIC)
-    CLAIMED_TYPE = Key('claimedtype',
-                       KEY_TYPES.STRING,
-                       kind_preference=['HVS'],
-                       replace_better=True)
     SPECTRAL_TYPE = Key('spectraltype',KEY_TYPES.STRING)
     STELLAR_CLASS = Key('stellarclass',KEY_TYPES.STRING)
     BOUND_PROBABILITY = Key('boundprobability',KEY_TYPES.NUMERIC)
@@ -387,8 +383,8 @@ class FastStars(Entry):
                     self[self._KEYS.VELOCITY],
                     key=lambda q: frame_priority(q, self._KEYS.VELOCITY)))
 
-        if self._KEYS.CLAIMED_TYPE in self:
-            self[self._KEYS.CLAIMED_TYPE] = self.ct_list_prioritized()
+        #if self._KEYS.CLAIMED_TYPE in self:
+        #    self[self._KEYS.CLAIMED_TYPE] = self.ct_list_prioritized()
 
         # Renumber and reorder sources
         if self._KEYS.SOURCES in self:
@@ -645,12 +641,12 @@ class FastStars(Entry):
 
         return name
 
-    def ct_list_prioritized(self):
-        ct_list = list(
-            sorted(
-                self[self._KEYS.CLAIMED_TYPE],
-                key=lambda key: self._ct_priority(key)))
-        return ct_list
+    #def ct_list_prioritized(self):
+    #    ct_list = list(
+    #        sorted(
+    #            self[self._KEYS.CLAIMED_TYPE],
+    #            key=lambda key: self._ct_priority(key)))
+    #    return ct_list
 
     def _ct_priority(self, attr):
         aliases = attr['source'].split(',')
