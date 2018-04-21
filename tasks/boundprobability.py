@@ -91,12 +91,14 @@ def do_boundprobability(catalog):
             kine_k = 3.0
             
             # Flags for having proper motions and radial velocities
+            haveparallax = False
             havepropermotions = False
             havevelocities = False
 
             # Do we have a parallax?
             if FASTSTARS.PARALLAX in catalog.entries[name]:
-                # Yes. 
+                # Yes.
+                haveparallax = True
                 kine_values[0] = float(catalog.entries[name][FASTSTARS.PARALLAX][0]['value'])
                 kine_errors[0] = float(catalog.entries[name][FASTSTARS.PARALLAX][0]['e_value'])
                 
@@ -185,24 +187,23 @@ def do_boundprobability(catalog):
             sinra = sin(ra)
             A = np.array([[cosra*cosdec, -sinra, -cosra*sindec], [sinra*cosdec, cosra, -sinra*sindec], [sindec, 0., cosdec]])
             B = np.dot(T, A) # T*A
-            invB = np.linalg.inv(B)
+            #invB = np.linalg.inv(B)
             kine_samples_solar = solarmotion_sampler(name,kine_samples_n)
             kine_vhel = kine_samples_solar[:,2:] # samples in UVW_solar
             kine_vhel[:,1] += kine_samples_solar[:,1] # add the vdisk component
-            solarreflex = np.einsum('ij,kj->ki',invB, kine_vhel)
-            kine_samples_corrected[:,1:] -= solarreflex
-            
+            kine_D = np.einsum('ei,ni->ne',B.T,kine_vhel)
+
             # If had no proper motions, then assume had exactly solar reflex
             if havepropermotions == False:
-                kine_samples_corrected[:,1] = 0.0
-                kine_samples_corrected[:,2] = 0.0
-            
+                kine_samples_corrected[:,1] = -1.0*kine_D[:,1]
+                kine_samples_corrected[:,2] = -1.0*kine_D[:,2]
+
             # If had no radial velocity, then assume had exactly solar reflex
             if havevelocities == False:
-                kine_samples_corrected[:,3] = 0.0
-                
-            # Calculate galactic velocity
-            kine_vgrf = np.sqrt(kine_samples_corrected[:,1]**2+kine_samples_corrected[:,2]**2+kine_samples_corrected[:,3]**2)
+                kine_samples_corrected[:,3] = -1.0*kine_D[:,0]
+
+            kine_samples_vhel = kine_vhel + np.einsum('ij,nj->ni',B,np.vstack([kine_samples_corrected[:,3],kine_samples_corrected[:,1],kine_samples_corrected[:,2]]).T)
+            kine_vgrf = np.sqrt(kine_samples_vhel[:,0]**2+kine_samples_vhel[:,1]**2+kine_samples_vhel[:,2]**2)
             
             # Calculate escape velocity
             kine_galrad = np.sqrt(kine_samples_solar[:,0]**2+(kine_samples_corrected[:,0]*cosb)**2-2.*kine_samples_solar[:,0]*kine_samples_corrected[:,0]*cosb*cosl)
@@ -214,22 +215,14 @@ def do_boundprobability(catalog):
             kine_betab = kine_samples_n-kine_bound_n+0.5
             kine_bound_percentiles = [beta.ppf(confidenceintervalcoverage/2.0,kine_betaa,kine_betab),beta.ppf(0.5,kine_betaa,kine_betab),beta.ppf(1.0-confidenceintervalcoverage/2.0,kine_betaa,kine_betab)]
             
-            # Debugging
-            #print(kine_values)
-            #print(kine_errors)
-            #print(kine_corr)
-            #print(kine_mu)
-            #print(kine_L,kine_k)
-            #print(kine_galrad)
-            #print(kine_samples_corrected[:,0])
-            
             # Store all outcomes.
             source = catalog.entries[name].add_self_source()
             boundprobability_upperlimit = (havepropermotions == False or havevelocities == False)
-            catalog.entries[name].add_quantity(FASTSTARS.BOUND_PROBABILITY, str(kine_bound_percentiles[1]), e_lower_value=str(kine_bound_percentiles[0]-kine_bound_percentiles[1]), e_upper_value=str(kine_bound_percentiles[2]-kine_bound_percentiles[1]), upperlimit = boundprobability_upperlimit, source=source, derived=True)
+            catalog.entries[name].add_quantity(FASTSTARS.BOUND_PROBABILITY, str(kine_bound_percentiles[1]), e_lower_value=str(kine_bound_percentiles[1]-kine_bound_percentiles[0]), e_upper_value=str(kine_bound_percentiles[2]-kine_bound_percentiles[1]), upperlimit = boundprobability_upperlimit, source=source, derived=True)
             catalog.entries[name].add_quantity(FASTSTARS.ESCAPE_VELOCITY, str(kine_vesc.mean()), e_value=str(kine_vesc.std()), u_value='km/s', source=source, derived=True)
             catalog.entries[name].add_quantity(FASTSTARS.VELOCITY, str(kine_vgrf.mean()), e_value=str(kine_vgrf.std()), u_value='km/s', lowerlimit = boundprobability_upperlimit, source=source, derived=True, kind='galactocentric')
-            catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(kine_samples_corrected[:,0].mean()), e_value=str(kine_samples_corrected[:,0].std()), u_value='kpc', source=source, derived=True)
+            if haveparallax == True:
+                catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(kine_samples_corrected[:,0].mean()), e_value=str(kine_samples_corrected[:,0].std()), u_value='kpc', source=source, derived=True)
     catalog.journal_entries()
     
     

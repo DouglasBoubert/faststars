@@ -36,8 +36,8 @@ class FASTSTARS(ENTRY):
                        KEY_TYPES.STRING,
                        kind_preference=['HVS'],
                        replace_better=True)
-    SPECTRAL_TYPE = Key('spectraltype',
-                        KEY_TYPES.STRING)
+    SPECTRAL_TYPE = Key('spectraltype',KEY_TYPES.STRING)
+    STELLAR_CLASS = Key('stellarclass',KEY_TYPES.STRING)
     BOUND_PROBABILITY = Key('boundprobability',KEY_TYPES.NUMERIC)
     ESCAPE_VELOCITY = Key('escapevelocity',KEY_TYPES.NUMERIC)
     VELOCITY = Key('velocity',KEY_TYPES.NUMERIC)
