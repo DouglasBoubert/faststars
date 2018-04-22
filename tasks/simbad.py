@@ -7,6 +7,7 @@ import astropy.units as un
 from astroquery.simbad import Simbad
 from astropy.table import vstack
 import warnings
+import time
 
 from astrocats.catalog.photometry import PHOTOMETRY
 from astrocats.catalog.utils import is_number, pbar, single_spaces, uniq_cdl
@@ -22,7 +23,9 @@ def do_simbad(catalog):
     customSimbad.ROW_LIMIT = -1
     customSimbad.TIMEOUT = 120
     customSimbad.add_votable_fields('otype', 'sptype', 'sp_bibcode', 'id')
-
+    
+    warnings.filterwarnings("ignore")
+    
     Mnames, Mradec = [], []
     for oname in pbar(keys, task_str):
         # Some events may be merged in cleanup process, skip them if
@@ -44,37 +47,33 @@ def do_simbad(catalog):
             c=coord(radec,unit=(un.hourangle, un.deg),frame='icrs')
 
             cnttry = 0
-            failedtofindstar = False
-            with warnings.catch_warnings():
-                warnings.filterwarnings('error')
-                while cnttry >-0.5 and cnttry < 10:
-                    try:
-                        cnttry += 1
-                        result = customSimbad.query_region(c,radius='0d0m10s')
-                        aliases = re.sub(r'b\'(.*)\'', r'\1',str(result['ID'].tolist()[0])).split(',')
-                    except TypeError: 
-                        continue
-                    except UserWarning:
-                        failedtofindstar = True
-                        catalog.log.warning(
-                            '"{}" was not found in Simbad.'.format(name)) 
-                    cnttry = -1.0
-                    
-            if failedtofindstar: continue
-            source = (catalog.entries[name]
-                      .add_source(name='SIMBAD astronomical database',
-                                  bibcode="2000A&AS..143....9W",
-                                  url="http://simbad.u-strasbg.fr/",
-                                  secondary=True))
-            for alias in aliases:
-                ali = single_spaces(re.sub(r'\[[^)]*\]', '', alias).strip())
-                if is_number(ali.replace(' ', '')):
+            foundstar = False
+            while foundstar == False and cnttry < 10:
+                try:
+                    cnttry += 1
+                    time.sleep(0.1)
+                    result = customSimbad.query_region(c,radius='0d0m10s')
+                    aliases = re.sub(r'b\'(.*)\'', r'\1',str(result['ID'].tolist()[0])).split(',')
+                except TypeError:
+                    #print(radec,cnttry)
                     continue
-                #if ali in simbadbannednames:
-                #    continue
-                ali = name_clean(ali)
-                catalog.entries[name].add_quantity(FASTSTARS.ALIAS,
-                                                   ali, source)
+                foundstar = True
+                    
+            if foundstar == True:
+                source = (catalog.entries[name]
+                          .add_source(name='SIMBAD astronomical database',
+                                      bibcode="2000A&AS..143....9W",
+                                      url="http://simbad.u-strasbg.fr/",
+                                      secondary=True))
+                for alias in aliases:
+                    ali = single_spaces(re.sub(r'\[[^)]*\]', '', alias).strip())
+                    if is_number(ali.replace(' ', '')):
+                        continue
+                    #if ali in simbadbannednames:
+                    #    continue
+                    ali = name_clean(ali)
+                    catalog.entries[name].add_quantity(FASTSTARS.ALIAS,
+                                                       ali, source)
                 
     catalog.journal_entries()
     return
