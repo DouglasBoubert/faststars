@@ -71,6 +71,15 @@
         "groups": ["meta"],
         "priority": -7
     },
+    "simbad": {
+        "nice_name": "Querying against Simbad",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.simbad",
+        "function": "do_simbad",
+        "groups": ["meta"],
+        "priority": -3
+    },
     "dust": {
         "nice_name": "Querying for dust",
         "active": true,

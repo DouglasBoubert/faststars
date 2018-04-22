@@ -210,7 +210,7 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
             FASTSTARS.LUM_DIST, str(row['Dhel']), u_value='kpc', source=source)
         catalog.entries[name].add_quantity(
-            FASTSTARS.SPECTRAL_TYPE, "g", source=source)
+            FASTSTARS.SPECTRAL_TYPE, "G", source=source)
         catalog.entries[name].add_quantity(
             FASTSTARS.SPECTRAL_TYPE, "K", source=source)
         catalog.entries[name].add_quantity(
