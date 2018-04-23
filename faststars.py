@@ -22,7 +22,8 @@ from .utils import frame_priority, host_clean, radec_clean
 
 class FASTSTARS(ENTRY):
     """FastStars `Key` child class."""
-    DISCOVERY_DATE = Key('discoverdate', KEY_TYPES.STRING)
+    DISCOVER_DATE = Key('discoverdate', KEY_TYPES.STRING)
+    DISCOVERER = Key('discoverer', KEY_TYPES.STRING)
     PROPER_MOTION_RA = Key('propermotionra', KEY_TYPES.NUMERIC,
         replace_better=True)
     PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC,

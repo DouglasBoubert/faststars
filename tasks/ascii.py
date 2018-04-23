@@ -34,6 +34,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = 'SDSS'+str(row['SDSS'])
         name, source = catalog.new_entry(oname, bibcode='2007ApJ...660..311B')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Warren R. Brown, Margaret J. Geller, Scott J. Kenyon, Michael J. Kurtz, Benjamin C. Bromley', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2007), source)
         gallon = float(str(row['Glon']))
         gallat = float(str(row['Glat']))
         radec = oname.strip('SDSSJ')
@@ -65,13 +68,16 @@ def do_ascii(catalog):
             FASTSTARS.STELLAR_CLASS, "g", source=source)
     catalog.journal_entries()
     
-    # 2009ApJ...690.1369B
+    # 2009ApJ...690.1639B
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
                             'apj292642t1_ascii.csv')
     data = read(datafile, format='csv')
     for row in pbar(data, task_str):
         oname = row['Catalog']
-        name, source = catalog.new_entry(oname, bibcode='2009ApJ...690.1369B')
+        name, source = catalog.new_entry(oname, bibcode='2009ApJ...690.1639B')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Warren R. Brown, Margaret J. Geller, Scott J. Kenyon', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2009), source)
         gallon = float(str(row['Glon']))
         gallat = float(str(row['Glat']))
         if (oname!='US708') & (oname!='HE0437-5439'):
@@ -121,6 +127,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = str(row['Catalog'])
         name, source = catalog.new_entry(oname, bibcode='2012ApJ...744L..24L')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Yinbi Li, Ali Luo, Gang Zhao, Youjun Lu, Juanjuan Ren, Fang Zuo', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2012), source)
         catalog.entries[name].add_quantity(
                 FASTSTARS.ALIAS, row['ID'], source=source)
         radec = oname.strip('SDSSJ')
@@ -153,6 +162,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = str(row['Catalog']).replace(' ','')
         name, source = catalog.new_entry(oname, bibcode='2012ApJ...751...55B')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Warren R. Brown, Margaret J. Geller, Scott J. Kenyon', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2012), source)
         gallon = float(str(row['Glon']))
         gallat = float(str(row['Glat']))
         if (oname!='US708') & (oname!='HE0437-5439'):
@@ -194,6 +206,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = 'SDSS'+str(row['Catalog']).replace(' ','')
         name, source = catalog.new_entry(oname, bibcode='2014ApJ...780....7P')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Lauren E. Palladino, Katharine J. Schlesinger, Kelly Holley-Bockelmann, Carlos Allende Prieto, Timothy C. Beers, Young Sun Lee, Donald P. Schneider', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2014), source)
         catalog.entries[name].add_quantity(
                 FASTSTARS.ALIAS, 'Pal'+str(row['Pal']), source=source)
         radec = oname.strip('SDSSJ')
@@ -224,6 +239,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = str(row['Catalog']).replace(' ','')
         name, source = catalog.new_entry(oname, bibcode='2014ApJ...787...89B')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Warren R. Brown, Margaret J. Geller, Scott J. Kenyon', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2014), source)
         radec = oname.strip('SDSSJ')
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:19]
         ra, dec = coord(radec, 
@@ -277,6 +295,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = str(row['ID'])
         name, source = catalog.new_entry(oname, bibcode='2014EAS....67..255Z')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER, 'Y. Q. Zhang, M. C. Smith, J. L. Carlin', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2014), source)
         catalog.entries[name].add_quantity(
                 FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
         catalog.entries[name].add_quantity(
@@ -300,6 +321,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = str(row['ID'])
         name, source = catalog.new_entry(oname, bibcode='2014ApJ...789L...2Z')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Jing Zhong, Li Chen, Chao Liu, Richard de Grijs, Jinliang Hou, Shiyin Shen, Zhengyi Shao, Jing Li, Ali Luo, Jianrong Shi, Haotong Zhang, Ming Yang, Licai Deng, Ge Jin, Yong Zhang, Yonghui Hou, Zhenchao Zhang', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2014), source)
         catalog.entries[name].add_quantity(
             FASTSTARS.ALIAS, str(row['Catalog']), source=source)
         radec = str(row['Catalog']).strip('J')
@@ -332,6 +356,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = str(row['Catalog']).replace(' ','')
         name, source = catalog.new_entry(oname, bibcode='2014ApJ...794..146T')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Christopher A. Theissen, Andrew A. West', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2014), source)
         radec = oname.strip('SDSSJ')
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
@@ -363,6 +390,9 @@ def do_ascii(catalog):
         oname = str(row['Catalog'])
         oname = oname[:4]+'J'+oname[4:]
         name, source = catalog.new_entry(oname, bibcode='2014ApJ...794..145S')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Antonia S. Savcheva, Andrew A. West, John J. Bochanski', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2014), source)
         radec = oname.strip('SDSSJ')
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:8]+' '+radec[8:11]+' '+radec[11:13]+' '+radec[13:17]
         ra, dec = coord(radec, 
@@ -395,6 +425,9 @@ def do_ascii(catalog):
         oname = str(row['Catalog']).strip(' ')
         oname = 'RAVE'+oname
         name, source = catalog.new_entry(oname, bibcode='2015MNRAS.447.2046H')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'K. Hawkins, G. Kordopatis, G. Gilmore, T. Masseron, R. F. G. Wyse, G. Ruchti, O. Bienaymé, J. Bland-Hawthorn, C. Boeche, K. Freeman, B. K. Gibson, E. K. Grebel, A. Helmi, A. Kunder, U. Munari, J. F. Navarro, Q. A. Parker, W. A. Reid, R. D. Scholz, G. Seabroke, A. Siebert, M. Steinmetz, F. Watson, T. Zwitter', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2015), source)
         radec = oname.strip('RAVEJ')
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:8]+' '+radec[8:11]+' '+radec[11:13]+' '+radec[13:15]
         ra, dec = coord(radec, 
@@ -423,6 +456,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = 'Pal'+str(row['Pal'])
         name, source = catalog.new_entry(oname, bibcode='2015A&A...576L..14Z')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'E. Ziegerer, M. Volkert, U. Heber, A. Irrgang, B. T. Gänsicke, S. Geier', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2015), source)
         catalog.entries[name].add_quantity(
             FASTSTARS.PROPER_MOTION_RA, str(row['pmra']), e_value=str(row['e_pmra']), u_value='mas/yr', source=source)
         catalog.entries[name].add_quantity(
@@ -440,6 +476,9 @@ def do_ascii(catalog):
             oname = '0'+oname
         oname = 'SDSSJ'+oname
         name, source = catalog.new_entry(oname.replace(':',''), bibcode='2015ApJ...804...49B')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Warren R. Brown, Jay Anderson, Oleg Y. Gnedin, Howard E. Bond, Margaret J. Geller, Scott J. Kenyon', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2015), source)
         #print(str(row['ID']))
         catalog.entries[name].add_quantity(
             FASTSTARS.ALIAS, str(row['ID']), source=source)
@@ -470,6 +509,9 @@ def do_ascii(catalog):
         oname = str(row['Catalog'])
         oname = 'LAMOST'+oname
         name, source = catalog.new_entry(oname, bibcode='2015RAA....15.1364L')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Yin-Bi Li, A.-Li Luo, Gang Zhao, You-Jun Lu, Peng Wei, Bing Du, Xiang Li, Yong-Heng Zhao, Zhan-Wen Han, Bo Wang, Yue Wu, Yong Zhang, Yong-Hui Hou, Yue-Fei Wang, Ming Yang', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2015), source)
         radec = oname.strip('LAMOSTJ')
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
@@ -507,6 +549,9 @@ def do_ascii(catalog):
         oname = str(row['Catalog'])
         oname = 'SDSS'+oname
         name, source = catalog.new_entry(oname, bibcode='2015AJ....150...77V')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'John J.Vickers, Martin C. Smith, Eva K. Grebel', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2015), source)
         radec = oname.strip('SDSSJ')
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
@@ -536,6 +581,9 @@ def do_ascii(catalog):
         oname = str(row['Catalog'])
         oname = 'SDSS'+oname
         name, source = catalog.new_entry(oname, bibcode='2015ApJ...813...26F')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Andrej Favia, Andrew A. West, Christopher A. Theissen', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2015), source)
         radec = oname.strip('SDSSJ')
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
@@ -568,6 +616,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = str(row['Catalog'])
         name, source = catalog.new_entry(oname, bibcode='2017ApJ...847L...9H')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Y. Huang, X.-W. Liu, H.-W. Zhang, B.-Q. Chen, M.-S. Xiang, C. Wang, H.-B. Yuan, Z.-J. Tian, Y.-B. Li, B. Wang', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2017), source)
         radec = oname.strip('J')
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
@@ -602,6 +653,9 @@ def do_ascii(catalog):
     for row in pbar(data, task_str):
         oname = 'TYC '+str(row['Tycho 2 ID']).strip(' ')
         name, source = catalog.new_entry(oname, bibcode='2017MNRAS.470.1388M')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'T. Marchetti, E. M. Rossi, G. Kordopatis, A. G. A. Brown, A. Rimoldi, E. Starkenburg, K. Youakim, R. Ashley,', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2017), source)
         sourcegaia = catalog.entries[name].add_source(bibcode='2016A&A...595A...2G')
         radec = str(row['RADEC'])
         ra, dec = coord(radec, 
