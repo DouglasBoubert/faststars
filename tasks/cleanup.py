@@ -4,6 +4,7 @@ import statistics
 import warnings
 from decimal import Decimal
 from math import log10, pi, sqrt
+import numpy as np
 
 from astrocats.catalog.quantity import QUANTITY
 from astrocats.catalog.utils import (get_sig_digits, is_number, pbar,
@@ -42,6 +43,26 @@ def do_cleanup(catalog):
 
         aliases = catalog.entries[name].get_aliases()
         catalog.entries[name].set_first_max_light()
+        
+        # Clean discoverer field
+        if FASTSTARS.DISCOVERER in catalog.entries[name]:
+            if len(catalog.entries[name][FASTSTARS.DISCOVERER]) > 1:
+                POSSIBLEDISCOVERER = [catalog.entries[name][FASTSTARS.DISCOVERER][i]['value'] for i in range(len(catalog.entries[name][FASTSTARS.DISCOVERER]))]
+                POSSIBLEDISCOVERER_DATE = [int(DATE['value']) for DATE in catalog.entries[name][FASTSTARS.DISCOVER_DATE]]
+                POSSIBLEDISCOVERER_DATE_SOURCES = [DATE['source'] for DATE in catalog.entries[name][FASTSTARS.DISCOVER_DATE]]
+                EARLIESTSOURCE = POSSIBLEDISCOVERER_DATE_SOURCES[np.argmin(POSSIBLEDISCOVERER_DATE)]
+                EARLIESTDISCOVER_DATE = catalog.entries[name][FASTSTARS.DISCOVER_DATE][np.argmin(POSSIBLEDISCOVERER_DATE)]
+                for DISCOVERER in catalog.entries[name][FASTSTARS.DISCOVERER]:
+                    for DISCOVERERSOURCE in DISCOVERER['source'].split(','):
+                        if DISCOVERERSOURCE == EARLIESTSOURCE:
+                            EARLIESTDISCOVERER = DISCOVERER
+                
+                for DISCOVERER in catalog.entries[name][FASTSTARS.DISCOVERER]:
+                    for DISCOVERERSOURCE in DISCOVERER['source'].split(','):
+                        if DISCOVERERSOURCE == EARLIESTSOURCE:
+                            EARLIESTDISCOVERER = DISCOVERER
+                catalog.entries[name][FASTSTARS.DISCOVERER] = [EARLIESTDISCOVERER]
+                catalog.entries[name][FASTSTARS.DISCOVER_DATE] = [EARLIESTDISCOVER_DATE]
 
         # Convert all distances to kpc.
         if FASTSTARS.LUM_DIST in catalog.entries[name]:
@@ -127,3 +148,4 @@ def do_cleanup(catalog):
     catalog.save_caches()
 
     return
+

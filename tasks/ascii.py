@@ -486,6 +486,8 @@ def do_ascii(catalog):
             FASTSTARS.PROPER_MOTION_RA, str(row['pmra']).strip(' '), e_value=str(row['e_pmra']).strip(' '), u_value='mas/yr', source=source)
         catalog.entries[name].add_quantity(
             FASTSTARS.PROPER_MOTION_DEC, str(row['pmdec']).strip(' '), e_value=str(row['e_pmdec']).strip(' '), u_value='mas/yr', source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.LUM_DIST, str(row['Dhel']).strip(' '), e_value=str(row['e_Dhel']).strip(' '), u_value='kpc', source=source)
         if str(row['newspec']) == 'y':
             radec = oname.strip('SDSSJ')
             ra, dec = radec[:11], radec[11:]
@@ -495,8 +497,8 @@ def do_ascii(catalog):
                 FASTSTARS.DEC, dec, source=source)
             catalog.entries[name].add_quantity(
                 FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
-            catalog.entries[name].add_quantity(
-                FASTSTARS.LUM_DIST, str(row['Dhel']), e_value=str(row['e_Dhel']), u_value='kpc', source=source)
+            #catalog.entries[name].add_quantity(
+            #    FASTSTARS.LUM_DIST, str(row['Dhel']), e_value=str(row['e_Dhel']), u_value='kpc', source=source)
             catalog.entries[name].add_quantity(
                     FASTSTARS.SPECTRAL_TYPE, str(row['Type']), source=source)
     catalog.journal_entries()

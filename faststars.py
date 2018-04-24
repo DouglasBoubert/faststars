@@ -38,6 +38,7 @@ class FASTSTARS(ENTRY):
     BOUND_PROBABILITY = Key('boundprobability',KEY_TYPES.NUMERIC)
     VELOCITY = Key('velocity',KEY_TYPES.NUMERIC)
     ERRORS = Key('errors')
+    LUM_DIST = Key('lumdist',KEY_TYPES.NUMERIC,replace_better=True)
 
 
 class FastStars(Entry):
@@ -182,17 +183,17 @@ class FastStars(Entry):
                                 isworse = False
                         else:
                             checke = True
-                        if checke and QUANTITY.CORRELATIONS in added_quantity:
-                            print(added_quantity[QUANTITY.SOURCE])
-                        ### Correlations are a trump card. Correlations trump everything. Most recent correlations wins.
-                            if QUANTITY.CORRELATIONS in ct:
-                                if float(ct[QUANTITY.SOURCE][:4]) > float(added_quantity[QUANTITY.SOURCE][:4]):
+                            
+                        if checke and QUANTITY.CORRELATIONS in ct:
+                            if QUANTITY.CORRELATIONS in added_quantity:
+                                if len(ct[QUANTITY.CORRELATIONS]) > len(added_quantity[QUANTITY.CORRELATIONS]):
                                     addct = True
-                                else:
-                                    isworse = False
+                                    checke = False
                             else:
-                                isworse = False
-                        elif checke and QUANTITY.E_VALUE in ct:
+                                addct = True
+                                checke = False
+                        
+                        if checke and QUANTITY.E_VALUE in ct:
                             if QUANTITY.E_VALUE in added_quantity:
                                 if (float(added_quantity[QUANTITY.E_VALUE])
                                         >= float(ct[QUANTITY.E_VALUE])):
@@ -200,9 +201,33 @@ class FastStars(Entry):
                                 if (float(added_quantity[QUANTITY.E_VALUE])
                                         <= float(ct[QUANTITY.E_VALUE])):
                                     isworse = False
+                            if QUANTITY.E_LOWER_VALUE in added_quantity and QUANTITY.E_UPPER_VALUE in added_quantity:
+                                if (0.5*float(added_quantity[QUANTITY.E_LOWER_VALUE])+0.5*float(added_quantity[QUANTITY.E_UPPER_VALUE])
+                                        >= float(ct[QUANTITY.E_VALUE])):
+                                    addct = True
+                                if (0.5*float(added_quantity[QUANTITY.E_LOWER_VALUE])+0.5*float(added_quantity[QUANTITY.E_UPPER_VALUE])
+                                        <= float(ct[QUANTITY.E_VALUE])):
+                                    isworse = False
+                        elif checke and QUANTITY.E_LOWER_VALUE in ct and QUANTITY.E_UPPER_VALUE in ct:
+                            if QUANTITY.E_VALUE in added_quantity:
+                                if (float(added_quantity[QUANTITY.E_VALUE])
+                                        >= 0.5*float(ct[QUANTITY.E_LOWER_VALUE])+0.5*float(ct[QUANTITY.E_UPPER_VALUE])):
+                                    addct = True
+                                if (float(added_quantity[QUANTITY.E_VALUE])
+                                        <= 0.5*float(ct[QUANTITY.E_LOWER_VALUE])+0.5*float(ct[QUANTITY.E_UPPER_VALUE])):
+                                    isworse = False
+                            if QUANTITY.E_LOWER_VALUE in added_quantity and QUANTITY.E_UPPER_VALUE in added_quantity:
+                                if (0.5*float(added_quantity[QUANTITY.E_LOWER_VALUE])+0.5*float(added_quantity[QUANTITY.E_UPPER_VALUE])
+                                        >= 0.5*float(ct[QUANTITY.E_LOWER_VALUE])+0.5*float(ct[QUANTITY.E_UPPER_VALUE])):
+                                    addct = True
+                                if (0.5*float(added_quantity[QUANTITY.E_LOWER_VALUE])+0.5*float(added_quantity[QUANTITY.E_UPPER_VALUE])
+                                        <= 0.5*float(ct[QUANTITY.E_LOWER_VALUE])+0.5*float(ct[QUANTITY.E_UPPER_VALUE])):
+                                    isworse = False
                         else:
                             if (checke and
-                                    QUANTITY.E_VALUE in added_quantity):
+                                    ((QUANTITY.E_VALUE in added_quantity) or (QUANTITY.E_LOWER_VALUE in added_quantity and QUANTITY.E_UPPER_VALUE in added_quantity))):
+                                isworse = False
+                            elif (checke and QUANTITY.CORRELATIONS in added_quantity):
                                 isworse = False
                             else:
                                 oldsig = get_sig_digits(ct[QUANTITY.VALUE])
