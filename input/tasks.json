@@ -71,6 +71,15 @@
         "groups": ["meta"],
         "priority": -7
     },
+    "ppmxl": {
+        "nice_name": "Querying against PPMXL",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.ppmxl",
+        "function": "do_ppmxl",
+        "groups": ["meta"],
+        "priority": -6
+    },
     "simbad": {
         "nice_name": "Querying against Simbad",
         "active": true,
