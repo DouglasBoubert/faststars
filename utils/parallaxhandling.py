@@ -69,6 +69,8 @@ def parallax_to_distance(NAME,PARALLAX,PARALLAX_ERROR,PHOTD=None,PHOTD_ERROR=Non
     return np.median(distance), np.std(distance)
     
 def kinematic_sampler(NAME,KINE_VALUES,KINE_ERRORS,KINE_CORR,KINE_L=1.35,KINE_K=3.0):
+    # KINE_VALUES = (PARALLAX,PMRA,PMDEC,VRAD)
+
     # Constants
     nstep_burn = 100
     nstep = 100
