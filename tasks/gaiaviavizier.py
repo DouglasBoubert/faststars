@@ -82,13 +82,30 @@ def do_gaiaviavizier(catalog):
                 result=result[0]
                 cntgphot += 1
                 source = catalog.entries[name].add_source(bibcode='2016A&A...595A...2G')
-                print(result)
+                #print(result)
                 catalog.entries[name].add_photometry(
                         time=57023,
                         u_time='MJD',
                         telescope='Gaia',
                         band='G',
                         magnitude=gtab('Gmag'),
+                        e_magnitude=gtab('e_Gmag'),
+                        source=source)
+                catalog.entries[name].add_photometry(
+                        time=57023,
+                        u_time='MJD',
+                        telescope='Gaia',
+                        band='GBP',
+                        magnitude=gtab('BPmag'),
+                        e_magnitude=gtab('e_BPmag'),
+                        source=source)
+                catalog.entries[name].add_photometry(
+                        time=57023,
+                        u_time='MJD',
+                        telescope='Gaia',
+                        band='GRP',
+                        magnitude=gtab('RPmag'),
+                        e_magnitude=gtab('e_RPmag'),
                         source=source)
                 gra,gde = coord(ra=float(gtab('RA_ICRS'))*un.deg,dec=float(gtab('DE_ICRS'))*un.deg,frame='icrs').to_string('hmsdms', sep=':').split()
                 if gtab('Plx') == '--':
@@ -113,6 +130,8 @@ def do_gaiaviavizier(catalog):
                         corr_dict = [{CORRELATION.VALUE:ast_corr[i][(i+j) % n_ast], CORRELATION.QUANTITY:ast_names[(i+j) % n_ast], CORRELATION.KIND:'Pearson'} for j in list(range(1,n_ast))]
                         catalog.entries[name].add_quantity(ast_keys[i], ast_values[i], source, e_value=ast_errors[i], u_value=ast_units[i], correlations=corr_dict)
                     
+                    if gtab('RV') != '--':
+                        catalog.entries[name].add_quantity(FASTSTARS.VELOCITY, gtab('RV'), source, e_value=gtab('e_RV'), u_value='km/s')
                     ##### This has been moved to boundprobability.py
                     # Convert parallax to distance
                     #if (FASTSTARS.LUM_DIST in catalog.entries[name]):
