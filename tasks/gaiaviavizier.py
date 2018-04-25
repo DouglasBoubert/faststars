@@ -72,7 +72,7 @@ def do_gaiaviavizier(catalog):
             #print(name,Mradec)
             c=coord(Mradec,unit=(un.hourangle, un.deg),frame='icrs')
             
-            result = silentgaiaquery(c, radius=un.Quantity(2.0, un.arcsecond), catalog='I/337/gaia')
+            result = silentgaiaquery(c, radius=un.Quantity(2.0, un.arcsecond), catalog='I/345/gaia2')
             
             # Utility function for accessing the Vizier table's columns
             def gtab(parstring):
@@ -82,12 +82,13 @@ def do_gaiaviavizier(catalog):
                 result=result[0]
                 cntgphot += 1
                 source = catalog.entries[name].add_source(bibcode='2016A&A...595A...2G')
+                print(result)
                 catalog.entries[name].add_photometry(
                         time=57023,
                         u_time='MJD',
                         telescope='Gaia',
                         band='G',
-                        magnitude=gtab('__Gmag_'),
+                        magnitude=gtab('Gmag'),
                         source=source)
                 gra,gde = coord(ra=float(gtab('RA_ICRS'))*un.deg,dec=float(gtab('DE_ICRS'))*un.deg,frame='icrs').to_string('hmsdms', sep=':').split()
                 if gtab('Plx') == '--':
