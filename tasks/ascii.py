@@ -182,6 +182,9 @@ def do_ascii(catalog):
         if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Warren R. Brown, Margaret J. Geller, Scott J. Kenyon', source)
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2012), source)
+        if name == 'SDSSJ112359.47+751807.73':
+            sourcewarren = catalog.entries[name].add_source(name='Warren R. Brown (private comm.)',secondary=True)
+            catalog.entries[name].add_quantity(FASTSTARS.SPECTRAL_TYPE, 'B9', source=sourcewarren)
         gallon = float(str(row['Glon']))
         gallat = float(str(row['Glat']))
         if (oname!='US708') & (oname!='HE0437-5439'):
