@@ -73,7 +73,7 @@
     },
     "ppmxl": {
         "nice_name": "Querying against PPMXL",
-        "active": true,
+        "active": false,
         "update": false,
         "module": "faststars.tasks.ppmxl",
         "function": "do_ppmxl",
