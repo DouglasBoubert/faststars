@@ -72,8 +72,8 @@ def do_boundprobability(catalog):
             continue
         else:
             # Obtain highest precision position
-            best_position_i = best_parameter(catalog.entries[name][FASTSTARS.RA])
-            Mradec=str(catalog.entries[name][FASTSTARS.RA][best_position_i]['value'])+str(catalog.entries[name][FASTSTARS.DEC][best_position_i]['value'])
+            #best_position_i = best_parameter(catalog.entries[name][FASTSTARS.RA])
+            Mradec=str(catalog.entries[name][FASTSTARS.RA][0]['value'])+str(catalog.entries[name][FASTSTARS.DEC][0]['value'])
             c=coord(Mradec,unit=(un.hourangle, un.deg),frame='icrs')
             
             # Obtain galactic coordinates
@@ -205,6 +205,10 @@ def do_boundprobability(catalog):
             kine_samples_vhel = kine_vhel + np.einsum('ij,nj->ni',B,np.vstack([kine_samples_corrected[:,3],kine_samples_corrected[:,1],kine_samples_corrected[:,2]]).T)
             kine_vgrf = np.sqrt(kine_samples_vhel[:,0]**2+kine_samples_vhel[:,1]**2+kine_samples_vhel[:,2]**2)
             
+            # Store samples for each star
+            if False: 
+                np.savez_compressed('/data/dpb33/GaiaHypervelocity/FastStars/outputpredr2/samples/'+name+'.npz',radec=Mradec,kine_samples_corrected=kine_samples_corrected,kine_samples_vhel=kine_samples_vhel)
+                
             # Calculate escape velocity
             kine_galrad = np.sqrt(kine_samples_solar[:,0]**2+(kine_samples_corrected[:,0]*cosb)**2-2.*kine_samples_solar[:,0]*kine_samples_corrected[:,0]*cosb*cosl)
             kine_vesc = vesc(MWPotential2014,kine_galrad*un.kpc)*kine_samples_solar[:,1]
