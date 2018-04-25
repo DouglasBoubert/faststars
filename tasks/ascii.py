@@ -27,6 +27,23 @@ def do_ascii(catalog):
     """Process ASCII files extracted from datatables of published works."""
     task_str = catalog.get_current_task_str()
 
+    # Shen unpublished
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'shen-unpublished.csv')
+    with open(datafile) as f:
+        data = []
+        for row in f.readlines():
+            cols = row.split(',')
+            data.append({'name': 'GaiaDR2-' + cols[0], 'ra': cols[5], 'e_ra': cols[6], 'dec': cols[7], 'e_dec': cols[8]})
+
+    for row in pbar(data, task_str):
+        oname = str(row['name'])
+        name, source = catalog.new_entry(oname, srcname='Shen et al. 2018')
+        ra, dec = coord(float(row['ra']), float(row['dec']), frame='icrs', unit='deg').to_string('hmsdms', sep=':').split()
+        catalog.entries[name].add_quantity(FASTSTARS.RA, ra, source, e_value=row['e_ra'], u_e_value='mas')
+        catalog.entries[name].add_quantity(FASTSTARS.DEC, dec, source, e_value=row['e_dec'], u_e_value='mas')
+        catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER, 'Gaia', source)
+
     # 2007ApJ...660..311B
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
                             'ApJ_660_311_table1.csv')

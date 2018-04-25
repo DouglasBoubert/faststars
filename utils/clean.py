@@ -67,8 +67,10 @@ def name_clean(name):
         newname = 'KSN' + newname[3:].lower()
     if newname.startswith('Gaia '):
         newname = newname.replace('Gaia ', 'Gaia', 1)
-    if newname.startswith('Gaia'):
-        newname = 'Gaia' + newname[4:].lower()
+    if newname.startswith('Gaiadr1'):
+        newname = 'GaiaDR1-' + newname[7:].lower()
+    if newname.startswith('Gaiadr2'):
+        newname = 'GaiaDR2-' + newname[7:].lower()
     if newname.startswith('GRB'):
         newname = newname.replace('GRB', 'GRB ', 1)
     # if newname.startswith('GRB ') and is_number(newname[4:].strip()):
