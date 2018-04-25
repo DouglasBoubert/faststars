@@ -253,6 +253,11 @@ def do_ascii(catalog):
             FASTSTARS.DEC, dec, source=source)
         catalog.entries[name].add_quantity(
                 FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
+        if FASTSTARS.SPECTRAL_TYPE not in catalog.entries[name]:
+            sourceboubert = catalog.entries[name].add_source(name='Boubert et al. (2018, in prep)',secondary=True)
+            print(sourceboubert)
+            catalog.entries[name].add_quantity(FASTSTARS.SPECTRAL_TYPE, 'A', source=sourceboubert)
+            catalog.entries[name].add_quantity(FASTSTARS.SPECTRAL_TYPE, 'B', source=sourceboubert)
         galrad = float(str(row['RGC']))
         errgalrad = float(str(row['e_RGC']))
         dhel = rgc_to_dhel(galrad,gallon,gallat)
