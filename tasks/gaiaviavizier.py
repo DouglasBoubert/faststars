@@ -72,7 +72,15 @@ def do_gaiaviavizier(catalog):
             #print(name,Mradec)
             c=coord(Mradec,unit=(un.hourangle, un.deg),frame='icrs')
             
-            result = silentgaiaquery(c, radius=un.Quantity(2.0, un.arcsecond), catalog='I/345/gaia2')
+            queryradius=0.
+            if (FASTSTARS.PROPER_MOTION_RA in catalog.entries[name] and FASTSTARS.PROPER_MOTION_DEC in catalog.entries[name]):
+                queryradius = 1e-3*3.*10.*np.sqrt(float(catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][0]['value'])**2.+float(catalog.entries[name][FASTSTARS.PROPER_MOTION_DEC][0]['value'])**2.)
+            queryradius = max(queryradius,2.)
+            
+            if name in []:
+                result = silentgaiaquery(c, radius=un.Quantity(30.0, un.arcsecond), catalog='I/345/gaia2')
+            else:
+                result = silentgaiaquery(c, radius=un.Quantity(queryradius, un.arcsecond), catalog='I/345/gaia2')
             
             # Utility function for accessing the Vizier table's columns
             def gtab(parstring):
@@ -80,6 +88,7 @@ def do_gaiaviavizier(catalog):
                         
             if len(result)>0:
                 result=result[0]
+                print(result)
                 cntgphot += 1
                 source = catalog.entries[name].add_source(bibcode='2016A&A...595A...2G')
                 #print(result)
@@ -112,7 +121,7 @@ def do_gaiaviavizier(catalog):
                     catalog.entries[name].add_quantity(FASTSTARS.RA,gra, source, e_value=gtab('e_RA_ICRS'), u_e_value='mas')
                     catalog.entries[name].add_quantity(FASTSTARS.DEC,gde, source, e_value=gtab('e_DE_ICRS'), u_e_value='mas')
                 else:
-                    print(gtab('Plx'))
+                    #print(gtab('Plx'))
                     cntgast += 1
                     catalog.log.warning(
                         '"{}" has Gaia astrometry.'.format(name))
