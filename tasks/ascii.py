@@ -34,7 +34,7 @@ def do_ascii(catalog):
         data = []
         for row in f.readlines():
             cols = row.split(',')
-            data.append({'name': 'Gaia ' + cols[0], 'ra': cols[5], 'e_ra': cols[6], 'dec': cols[7], 'e_dec': cols[8]})
+            data.append({'name': 'GaiaDR2-' + cols[0], 'ra': cols[5], 'e_ra': cols[6], 'dec': cols[7], 'e_dec': cols[8]})
 
     for row in pbar(data, task_str):
         oname = str(row['name'])
