@@ -69,8 +69,8 @@ def do_simbad(catalog):
                     ali = single_spaces(re.sub(r'\[[^)]*\]', '', alias).strip())
                     if is_number(ali.replace(' ', '')):
                         continue
-                    #if ali in simbadbannednames:
-                    #    continue
+                    if ali[:4] == "HVS ":
+                        continue
                     ali = name_clean(ali)
                     catalog.entries[name].add_quantity(FASTSTARS.ALIAS,
                                                        ali, source)
