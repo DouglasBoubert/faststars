@@ -75,7 +75,7 @@ def do_gaiaviavizier(catalog):
             queryradius=0.
             if (FASTSTARS.PROPER_MOTION_RA in catalog.entries[name] and FASTSTARS.PROPER_MOTION_DEC in catalog.entries[name]):
                 queryradius = 1e-3*3.*10.*np.sqrt(float(catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][0]['value'])**2.+float(catalog.entries[name][FASTSTARS.PROPER_MOTION_DEC][0]['value'])**2.)
-            queryradius = max(queryradius,2.)
+            queryradius = max(queryradius,3.)
             
             if name in []:
                 result = silentgaiaquery(c, radius=un.Quantity(30.0, un.arcsecond), catalog='I/345/gaia2')
@@ -84,14 +84,17 @@ def do_gaiaviavizier(catalog):
             
             # Utility function for accessing the Vizier table's columns
             def gtab(parstring):
-                return str(result[parstring][0])
+                return str(result[parstring])
                         
             if len(result)>0:
-                result=result[0]
-                print(result)
+                if len(result[0])>1:
+                    indexclosest = np.argmin(result[0]['_r'])
+                    result=result[0][indexclosest]
+                else:
+                    result=result[0][0]
+                
                 cntgphot += 1
                 source = catalog.entries[name].add_source(bibcode='2016A&A...595A...2G')
-                #print(result)
                 catalog.entries[name].add_photometry(
                         time=57023,
                         u_time='MJD',
@@ -123,8 +126,8 @@ def do_gaiaviavizier(catalog):
                 else:
                     #print(gtab('Plx'))
                     cntgast += 1
-                    catalog.log.warning(
-                        '"{}" has Gaia astrometry.'.format(name))
+                    #catalog.log.warning(
+                    #    '"{}" has Gaia astrometry.'.format(name))
                     
                     ast_keys = [FASTSTARS.RA,FASTSTARS.DEC,FASTSTARS.PARALLAX,FASTSTARS.PROPER_MOTION_RA,FASTSTARS.PROPER_MOTION_DEC]
                     ast_values = [gra,gde,gtab('Plx'),gtab('pmRA'),gtab('pmDE')]

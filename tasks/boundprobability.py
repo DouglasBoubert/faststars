@@ -205,13 +205,19 @@ def do_boundprobability(catalog):
             kine_samples_vhel = kine_vhel + np.einsum('ij,nj->ni',B,np.vstack([kine_samples_corrected[:,3],kine_samples_corrected[:,1],kine_samples_corrected[:,2]]).T)
             kine_vgrf = np.sqrt(kine_samples_vhel[:,0]**2+kine_samples_vhel[:,1]**2+kine_samples_vhel[:,2]**2)
             
-            # Store samples for each star
-            if False: 
-                np.savez_compressed('/data/dpb33/GaiaHypervelocity/FastStars/outputpredr2/samples/'+name+'.npz',radec=Mradec,kine_samples_corrected=kine_samples_corrected,kine_samples_vhel=kine_samples_vhel)
-                
             # Calculate escape velocity
             kine_galrad = np.sqrt(kine_samples_solar[:,0]**2+(kine_samples_corrected[:,0]*cosb)**2-2.*kine_samples_solar[:,0]*kine_samples_corrected[:,0]*cosb*cosl)
             kine_vesc = vesc(MWPotential2014,kine_galrad*un.kpc)*kine_samples_solar[:,1]
+            
+            # Store samples for each star
+            if False:
+                kine_samples_output = np.copy(kine_samples_corrected)
+                kine_samples_output[:,1] /= (k*kine_samples[:,0])
+                kine_samples_output[:,2] /= (k*kine_samples[:,0])
+                #np.savez_compressed('/data/dpb33/GaiaHypervelocity/FastStars/outputpredr2/samples/'+name+'.npz',radec=Mradec,kine_samples_output=kine_samples_output,kine_samples_solar=kine_samples_solar)
+                np.savez_compressed('/data/dpb33/GaiaHypervelocity/WhiteDwarfs/faststaroutput/samplesrcw86/'+name+'.npz',radec=Mradec,kine_samples_output=kine_samples_output,kine_samples_solar=kine_samples_solar,kine_vgrf=kine_vgrf)
+                
+
             
             # Bound probability
             kine_bound_n = np.where( kine_vesc > kine_vgrf )[0].shape[0]
