@@ -24,7 +24,7 @@
         "module": "catalog.tasks.merge_duplicates",
         "function": "merge_duplicates",
         "groups": ["meta"],
-        "priority": -100
+        "priority": 3
     },
     "mergeradec": {
         "nice_name": "Merging entries",
@@ -33,7 +33,7 @@
         "module": "faststars.tasks.mergeradec",
         "function": "do_mergeradec",
         "groups": ["meta"],
-        "priority": -20
+        "priority": 4
     },
     "cleanup": {
         "nice_name": "Cleaning up entries",
@@ -42,7 +42,7 @@
         "module": "faststars.tasks.cleanup",
         "function": "do_cleanup",
         "groups": ["meta"],
-        "priority": -10
+        "priority": 5
     },
     "sdss": {
         "nice_name": "Querying against SDSS",
@@ -51,7 +51,7 @@
         "module": "faststars.tasks.sdss",
         "function": "do_sdss",
         "groups": ["meta"],
-        "priority": -8
+        "priority": 6
     },
     "gaia": {
         "nice_name": "Querying against Gaia",
@@ -60,7 +60,7 @@
         "module": "faststars.tasks.gaia",
         "function": "do_gaia",
         "groups": ["meta"],
-        "priority": -7
+        "priority": 7
     },
     "gaiaviavizier": {
         "nice_name": "Querying against Gaia via Vizier",
@@ -69,7 +69,7 @@
         "module": "faststars.tasks.gaiaviavizier",
         "function": "do_gaiaviavizier",
         "groups": ["meta"],
-        "priority": -7
+        "priority": 8
     },
     "ppmxl": {
         "nice_name": "Querying against PPMXL",
@@ -78,7 +78,7 @@
         "module": "faststars.tasks.ppmxl",
         "function": "do_ppmxl",
         "groups": ["meta"],
-        "priority": -6
+        "priority": 9
     },
     "simbad": {
         "nice_name": "Querying against Simbad",
@@ -87,7 +87,7 @@
         "module": "faststars.tasks.simbad",
         "function": "do_simbad",
         "groups": ["meta"],
-        "priority": -3
+        "priority": 10
     },
     "dust": {
         "nice_name": "Querying for dust",
@@ -96,7 +96,7 @@
         "module": "faststars.tasks.dust",
         "function": "do_dust",
         "groups": ["meta"],
-        "priority": -2
+        "priority": 11
     },
     "boundprobability": {
         "nice_name": "Calculating bound probability",
@@ -104,6 +104,15 @@
         "update": false,
         "module": "faststars.tasks.boundprobability",
         "function": "do_boundprobability",
+        "groups": ["meta"],
+        "priority": 12
+    },
+    "final_cleanup": {
+        "nice_name": "Cleaning up entries one last time",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.cleanup",
+        "function": "do_cleanup",
         "groups": ["meta"],
         "priority": -1
     }
