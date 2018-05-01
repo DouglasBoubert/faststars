@@ -27,23 +27,6 @@ def do_ascii(catalog):
     """Process ASCII files extracted from datatables of published works."""
     task_str = catalog.get_current_task_str()
 
-    # Shen unpublished
-    #datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
-    #                        'shen-unpublished.csv')
-    #with open(datafile) as f:
-    #    data = []
-    #    for row in f.readlines():
-    #        cols = row.split(',')
-    #        data.append({'name': 'GaiaDR2-' + cols[0], 'ra': cols[5], 'e_ra': cols[6], 'dec': cols[7], 'e_dec': cols[8]})
-
-    #for row in pbar(data, task_str):
-    #    oname = str(row['name'])
-    #    name, source = catalog.new_entry(oname, srcname='Shen et al. 2018')
-    #    ra, dec = coord(float(row['ra']), float(row['dec']), frame='icrs', unit='deg').to_string('hmsdms', sep=':').split()
-    #    catalog.entries[name].add_quantity(FASTSTARS.RA, ra, source, e_value=row['e_ra'], u_e_value='mas')
-    #    catalog.entries[name].add_quantity(FASTSTARS.DEC, dec, source, e_value=row['e_dec'], u_e_value='mas')
-    #    catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER, 'Gaia', source)
-
     # 2007ApJ...660..311B
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
                             'ApJ_660_311_table1.csv')
@@ -60,7 +43,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -102,7 +85,7 @@ def do_ascii(catalog):
             radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
             ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
             catalog.entries[name].add_quantity(
                 FASTSTARS.RA, ra, source=source)
             catalog.entries[name].add_quantity(
@@ -153,7 +136,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -192,7 +175,7 @@ def do_ascii(catalog):
             radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
             ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
             catalog.entries[name].add_quantity(
                 FASTSTARS.RA, ra, source=source)
             catalog.entries[name].add_quantity(
@@ -235,7 +218,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -266,7 +249,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:19]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -275,7 +258,6 @@ def do_ascii(catalog):
                 FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
         if FASTSTARS.SPECTRAL_TYPE not in catalog.entries[name]:
             sourceboubert = catalog.entries[name].add_source(name='Boubert et al. (2018, in prep)',secondary=True)
-            print(sourceboubert)
             catalog.entries[name].add_quantity(FASTSTARS.SPECTRAL_TYPE, 'A', source=sourceboubert)
             catalog.entries[name].add_quantity(FASTSTARS.SPECTRAL_TYPE, 'B', source=sourceboubert)
         galrad = float(str(row['RGC']))
@@ -355,7 +337,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -388,7 +370,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -422,7 +404,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:8]+' '+radec[8:11]+' '+radec[11:13]+' '+radec[13:17]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -457,7 +439,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:8]+' '+radec[8:11]+' '+radec[11:13]+' '+radec[13:15]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -504,7 +486,6 @@ def do_ascii(catalog):
         if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Warren R. Brown, Jay Anderson, Oleg Y. Gnedin, Howard E. Bond, Margaret J. Geller, Scott J. Kenyon', source)
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2015), source)
-        #print(str(row['ID']))
         catalog.entries[name].add_quantity(
             FASTSTARS.ALIAS, str(row['ID']), source=source)
         catalog.entries[name].add_quantity(
@@ -543,7 +524,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.ALIAS, 'Li'+str(row['ID']), source=source)
         catalog.entries[name].add_quantity(
@@ -583,7 +564,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -615,7 +596,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.ALIAS, 'RdM'+str(row['ID']), source=source)
         catalog.entries[name].add_quantity(
@@ -650,7 +631,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.ALIAS, str(row['Alias']), source=source)
         catalog.entries[name].add_quantity(
@@ -681,13 +662,13 @@ def do_ascii(catalog):
         oname = 'TYC '+str(row['Tycho 2 ID']).strip(' ')
         name, source = catalog.new_entry(oname, bibcode='2017MNRAS.470.1388M')
         if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
-            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'T. Marchetti, E. M. Rossi, G. Kordopatis, A. G. A. Brown, A. Rimoldi, E. Starkenburg, K. Youakim, R. Ashley,', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'T. Marchetti, E. M. Rossi, G. Kordopatis, A. G. A. Brown, A. Rimoldi, E. Starkenburg, K. Youakim, R. Ashley', source)
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2017), source)
         sourcegaia = catalog.entries[name].add_source(bibcode='2016A&A...595A...2G')
         radec = str(row['RADEC'])
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':').split()
+                'hmsdms', sep=':', precision=8).split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=sourcegaia)
         catalog.entries[name].add_quantity(
@@ -709,5 +690,40 @@ def do_ascii(catalog):
             for SC in stellarclass:
                 catalog.entries[name].add_quantity(
                     FASTSTARS.STELLAR_CLASS, SC, source=source)
+                    
+    # 2018arXiv180410607M
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
+                            'marchetti2018.txt')
+    data = read(datafile)
+    for row in pbar(data, task_str):
+        oname = 'GaiaDR2 '+str(row['source_id']).strip(' ')
+        name, source = catalog.new_entry(oname, bibcode='2018arXiv180410607M')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'T. Marchetti, E. M. Rossi, A. G. A. Brown', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2018), source)
+        #sourcegaia = catalog.entries[name].add_source(bibcode='2016A&A...595A...2G')
+        ra, dec = coord(ra=float(row['ra'])*u.deg,dec=float(row['dec'])*u.deg,frame='icrs').to_string(
+                'hmsdms', sep=':', precision=8).split()
+        catalog.entries[name].add_quantity(
+            FASTSTARS.RA, ra, source=source)
+        catalog.entries[name].add_quantity(
+            FASTSTARS.DEC, dec, source=source)
+        #catalog.entries[name].add_quantity(
+        #        FASTSTARS.VELOCITY, str(row['HRV']), e_value=str(row['e_HRV']), source=source)
+        #catalog.entries[name].add_quantity(
+        #    FASTSTARS.LUM_DIST, str(float(str(row['d']))/1e3), e_lower_value=str(float(str(row['e_low_d']))/1e3), e_upper_value=str(float(str(row['e_upp_d']))/1e3), u_value='kpc', source=source)
+        
+        #if str(row['dspec'])!='--':
+        #    catalog.entries[name].add_quantity(
+        #        FASTSTARS.LUM_DIST, str(float(str(row['dspec']))/1e3), e_value=str(float(str(row['e_dspec']))/1e3), u_value='kpc', source=source)
+        #sptype = str(row['SpectralType'])
+        #if sptype != '--':
+        #    catalog.entries[name].add_quantity(
+        #        FASTSTARS.SPECTRAL_TYPE, sptype, source=source)
+        #stellarclass = str(row['StellarClass']).split('/')
+        #if str(row['StellarClass'])!='--':
+        #    for SC in stellarclass:
+        #        catalog.entries[name].add_quantity(
+        #            FASTSTARS.STELLAR_CLASS, SC, source=source)
     catalog.journal_entries()
     return
