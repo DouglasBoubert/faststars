@@ -43,7 +43,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -85,7 +85,7 @@ def do_ascii(catalog):
             radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
             ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
             catalog.entries[name].add_quantity(
                 FASTSTARS.RA, ra, source=source)
             catalog.entries[name].add_quantity(
@@ -136,7 +136,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -175,7 +175,7 @@ def do_ascii(catalog):
             radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
             ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
             catalog.entries[name].add_quantity(
                 FASTSTARS.RA, ra, source=source)
             catalog.entries[name].add_quantity(
@@ -218,7 +218,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -249,7 +249,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:19]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -337,7 +337,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -370,7 +370,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:18]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -404,7 +404,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:8]+' '+radec[8:11]+' '+radec[11:13]+' '+radec[13:17]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -439,7 +439,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:8]+' '+radec[8:11]+' '+radec[11:13]+' '+radec[13:15]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -524,7 +524,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.ALIAS, 'Li'+str(row['ID']), source=source)
         catalog.entries[name].add_quantity(
@@ -564,7 +564,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
@@ -596,7 +596,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.ALIAS, 'RdM'+str(row['ID']), source=source)
         catalog.entries[name].add_quantity(
@@ -631,7 +631,7 @@ def do_ascii(catalog):
         radec = radec[0:2]+' '+radec[2:4]+' '+radec[4:9]+' '+radec[9:12]+' '+radec[12:14]+' '+radec[14:]
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.ALIAS, str(row['Alias']), source=source)
         catalog.entries[name].add_quantity(
@@ -668,7 +668,7 @@ def do_ascii(catalog):
         radec = str(row['RADEC'])
         ra, dec = coord(radec, 
                 unit=(u.hourangle, u.deg)).to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=sourcegaia)
         catalog.entries[name].add_quantity(
@@ -703,7 +703,7 @@ def do_ascii(catalog):
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2018), source)
         #sourcegaia = catalog.entries[name].add_source(bibcode='2016A&A...595A...2G')
         ra, dec = coord(ra=float(row['ra'])*u.deg,dec=float(row['dec'])*u.deg,frame='icrs').to_string(
-                'hmsdms', sep=':', precision=8).split()
+                'hmsdms', sep=':').split()
         catalog.entries[name].add_quantity(
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
