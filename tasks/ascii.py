@@ -696,9 +696,9 @@ def do_ascii(catalog):
                             'marchetti2018.txt')
     data = read(datafile)
     for row in pbar(data, task_str):
-        oname = 'GaiaDR2'+str(row['source_id']).strip()[:6]
+        oname = 'GaiaDR2 '+str(row['source_id']).strip()[:6]
         name, source = catalog.new_entry(oname, bibcode='2018arXiv180410607M')
-        lname = 'GaiaDR2'+str(row['source_id']).strip()
+        lname = 'GaiaDR2 '+str(row['source_id']).strip()
         catalog.entries[name].add_quantity(FASTSTARS.ALIAS, lname, source=source)
         if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'T. Marchetti, E. M. Rossi, A. G. A. Brown', source)
