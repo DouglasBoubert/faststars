@@ -51,34 +51,36 @@ def do_mergeradec(catalog):
             Mnames.append(name)
             Mradec.append(str(catalog.entries[name][FASTSTARS.RA][0]['value'])+str(catalog.entries[name][FASTSTARS.DEC][0]['value']))
     
-    c=coord(Mradec,unit=(un.hourangle, un.deg))
-    
-    ### Construct tree to look for duplicates
-    # Convert to pixel space
-    pixx = np.cos(c.dec.rad)*np.cos(c.ra.rad)
-    pixy = np.cos(c.dec.rad)*np.sin(c.ra.rad)
-    pixz = np.sin(c.dec.rad)
-    pix = np.vstack([pixx,pixy,pixz]).T
+    if len(Mradec)>1:
+        # Only can merge if we have at least two stars!
+        c=coord(Mradec,unit=(un.hourangle, un.deg))
+        
+        ### Construct tree to look for duplicates
+        # Convert to pixel space
+        pixx = np.cos(c.dec.rad)*np.cos(c.ra.rad)
+        pixy = np.cos(c.dec.rad)*np.sin(c.ra.rad)
+        pixz = np.sin(c.dec.rad)
+        pix = np.vstack([pixx,pixy,pixz]).T
 
-    # Construct tree
-    pixtree = cKDTree(pix)
+        # Construct tree
+        pixtree = cKDTree(pix)
 
-    # Query pairs
-    pixarcsec = np.tan(5.*np.pi/180./3600.)
-    pairs=pixtree.query_pairs(pixarcsec)
-    arrpairs = np.array(list(pairs))
-    
-    # Attempt to merge pairs
-    for i,j in arrpairs:
-        try:
-            catalog.copy_entry_to_entry(
-                catalog.entries[Mnames[i]], catalog.entries[Mnames[j]])
-            del catalog.entries[Mnames[i]]
-            print("`{}` and `{}` merged".
-                       format(Mnames[i],Mnames[j]))
-        except KeyError:
-            print("`{}` and `{}` pair already broken".
-                       format(Mnames[i],Mnames[j]))
+        # Query pairs
+        pixarcsec = np.tan(5.*np.pi/180./3600.)
+        pairs=pixtree.query_pairs(pixarcsec)
+        arrpairs = np.array(list(pairs))
+        
+        # Attempt to merge pairs
+        for i,j in arrpairs:
+            try:
+                catalog.copy_entry_to_entry(
+                    catalog.entries[Mnames[i]], catalog.entries[Mnames[j]])
+                del catalog.entries[Mnames[i]]
+                print("`{}` and `{}` merged".
+                           format(Mnames[i],Mnames[j]))
+            except KeyError:
+                print("`{}` and `{}` pair already broken".
+                           format(Mnames[i],Mnames[j]))
     
     catalog.save_caches()
 

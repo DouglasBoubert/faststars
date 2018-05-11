@@ -52,7 +52,7 @@ def do_simbad(catalog):
                 try:
                     cnttry += 1
                     time.sleep(0.1)
-                    result = customSimbad.query_region(c,radius='0d0m10s')
+                    result = customSimbad.query_region(c,radius='0d0m5s')
                     aliases = re.sub(r'b\'(.*)\'', r'\1',str(result['ID'].tolist()[0])).split(',')
                 except TypeError:
                     #print(radec,cnttry)
