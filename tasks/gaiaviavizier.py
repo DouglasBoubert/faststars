@@ -78,7 +78,10 @@ def do_gaiaviavizier(catalog):
             continue
         else:
             if hasdr2id:
-                result = silentgaiaobjectquery(dr2id, radius=un.Quantity(1.0, un.arcsecond), catalog='I/345/gaia2')
+                result = silentgaiaobjectquery(dr2id, radius=un.Quantity(10.0, un.arcsecond), catalog='I/345/gaia2')
+                if len(result)<1:
+                    catalog.log.warning(
+                '"{}" should really have had a cross-match.'.format(name))
             else:
                 Mradec=str(catalog.entries[name][FASTSTARS.RA][0]['value'])+str(catalog.entries[name][FASTSTARS.DEC][0]['value'])
                 #print(name,Mradec)
