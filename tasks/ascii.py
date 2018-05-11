@@ -257,7 +257,7 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(
                 FASTSTARS.VELOCITY, str(row['Vhel']), e_value=str(row['e_Vhel']), source=source)
         if FASTSTARS.SPECTRAL_TYPE not in catalog.entries[name]:
-            sourceboubert = catalog.entries[name].add_source(name='Boubert et al. (2018, in prep)',secondary=True)
+            sourceboubert = catalog.entries[name].add_source(bibcode='2018arXiv180410179B',secondary=True)
             catalog.entries[name].add_quantity(FASTSTARS.SPECTRAL_TYPE, 'A', source=sourceboubert)
             catalog.entries[name].add_quantity(FASTSTARS.SPECTRAL_TYPE, 'B', source=sourceboubert)
         galrad = float(str(row['RGC']))
@@ -696,8 +696,10 @@ def do_ascii(catalog):
                             'marchetti2018.txt')
     data = read(datafile)
     for row in pbar(data, task_str):
-        oname = 'GaiaDR2 '+str(row['source_id']).strip(' ')
+        oname = 'GaiaDR2 '+str(row['source_id']).strip()[:6]
         name, source = catalog.new_entry(oname, bibcode='2018arXiv180410607M')
+        lname = 'GaiaDR2 '+str(row['source_id']).strip()
+        catalog.entries[name].add_quantity(FASTSTARS.ALIAS, lname, source=source)
         if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'T. Marchetti, E. M. Rossi, A. G. A. Brown', source)
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2018), source)
