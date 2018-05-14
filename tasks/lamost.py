@@ -73,7 +73,7 @@ def do_lamost(catalog):
                 catalog.entries[name].add_quantity(
                     FASTSTARS.SPECTRAL_TYPE, row['SubClass'], source=source)
 
-            if is_number(row['z']):
+            if row['z'] and is_number(row['z']):
                 catalog.entries[name].add_quantity(
                     FASTSTARS.REDSHIFT, str(row['z']), e_value=str(row['e_z']),
                     source=source)
