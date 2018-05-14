@@ -74,7 +74,7 @@ class FastStarsCatalog(Catalog):
         bury_entry = False
 
         if (FASTSTARS.BOUND_PROBABILITY in self.entries[name] and
-            self.entries[name][
+            not self.entries[name][
                 FASTSTARS.BOUND_PROBABILITY][0].get(
                     QUANTITY.UPPER_LIMIT, False) and float(
                     self.entries[name][FASTSTARS.BOUND_PROBABILITY][0][
