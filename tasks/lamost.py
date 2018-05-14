@@ -52,7 +52,8 @@ def do_lamost(catalog):
 
             star = None
             for row in tab:
-                if row['Class'].lower() == 'star':
+                if (row['objType'] == 'Star' and
+                        row['Class'].lower() in ['star', 'unknown']):
                     star = row
                     break
             if not star:
