@@ -156,7 +156,7 @@ def do_lamost(catalog):
                     raise ValueError("Couldn't find JD/MJD for spectrum.")
                 if hdulist[0].header['NAXIS'] == 2:
                     waves = [str(x) for x in list(hdulist[0].data)[2]]
-                    fluxes = [str(x) for x in list(hdulist[0].data)[1]]
+                    fluxes = [str(x) for x in list(hdulist[0].data)[0]]
                 else:
                     print('Warning: Skipping FITS spectrum `{}`.'.format(
                         datafile))
