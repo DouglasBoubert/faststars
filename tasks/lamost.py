@@ -4,10 +4,11 @@ from decimal import Decimal
 
 import astropy.coordinates as coord
 import astropy.units as un
+import astropy.constants as con
 import requests
 from astrocats.catalog.spectrum import SPECTRUM
 from astrocats.catalog.photometry import PHOTOMETRY
-from astrocats.catalog.utils import jd_to_mjd, pbar, is_number
+from astrocats.catalog.utils import jd_to_mjd, pbar, is_number, pretty_num
 from astropy.io import fits
 from astropy.time import Time as astrotime
 from astroquery.vizier import Vizier
@@ -26,6 +27,8 @@ def do_lamost(catalog):
     viz = Vizier(columns=["**"])
 
     fureps = {'erg/cm2/s/A': 'erg/s/cm^2/Angstrom'}
+
+    c_kms = con.c.cgs.value / 1.0e5
 
     for oname in pbar(keys, task_str):
         # Some events may be merged in cleanup process, skip them if
@@ -68,6 +71,16 @@ def do_lamost(catalog):
             if row['SubClass'] is not 'Non':
                 catalog.entries[name].add_quantity(
                     FASTSTARS.SPECTRAL_TYPE, row['SubClass'], source=source)
+
+            if is_number(row['z']):
+                catalog.entries[name].add_quantity(
+                    FASTSTARS.REDSHIFT, str(row['z']), e_value=str(row['e_z']),
+                    source=source)
+                catalog.entries[name].add_quantity(
+                    FASTSTARS.VELOCITY,
+                    pretty_num(float(row['z']) * c_kms, sig=5),
+                    e_value=pretty_num(float(row['e_z'] * c_kms), sig=5),
+                    source=source)
 
             mag_types = list(row['magType'].replace('psf_', ''))
 
