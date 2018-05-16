@@ -117,6 +117,17 @@
         "groups": ["meta"],
         "priority": 13
     },
+    "donated_spectra": {
+        "nice_name": "%pre Donated spectra",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.donations",
+        "function": "do_donated_spectra",
+        "groups": ["spectra"],
+        "repo": "input/faststars-external",
+        "always_journal": true,
+        "priority": 14
+    },
     "final_cleanup": {
         "nice_name": "Cleaning up entries one last time",
         "active": true,
