@@ -66,14 +66,22 @@ class FastStarsCatalog(Catalog):
         return
 
     def should_bury(self, name):
-        """Determine whether an entry should be "buried".
+        """Determine whether a fast star should be "buried".
 
-        An entry would be buried if it does not belong to the class of object
-        associated with the given catalog.
-        
-        FIX: perhaps sometimes we do want to bury?
+        For fast stars, objects that have enough data such that they can be
+        definitively determined to be "bound" are buried.
         """
-        return (False, True)
+        bury_entry = False
+
+        if (FASTSTARS.BOUND_PROBABILITY in self.entries[name] and
+            not self.entries[name][
+                FASTSTARS.BOUND_PROBABILITY][0].get(
+                    QUANTITY.UPPER_LIMIT, False) and float(
+                    self.entries[name][FASTSTARS.BOUND_PROBABILITY][0][
+                        QUANTITY.VALUE]) >= 0.9998):
+            bury_entry = True
+
+        return (bury_entry, True)
 
     def _load_aux_data(self):
         """Load auxiliary dictionaries for use in this catalog."""

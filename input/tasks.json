@@ -107,6 +107,16 @@
         "groups": ["meta"],
         "priority": 11
     },
+    "lamost": {
+        "nice_name": "Querying for spectra in LAMOST",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.lamost",
+        "function": "do_lamost",
+        "groups": ["meta"],
+        "repo": "input/faststars-external",
+        "priority": 12
+    },
     "boundprobability": {
         "nice_name": "Calculating bound probability",
         "active": true,
@@ -115,7 +125,18 @@
         "function": "do_boundprobability",
         "groups": ["meta"],
         "repo": "input/faststars-external/AUXILIARY",
-        "priority": 12
+        "priority": 13
+    },
+    "donated_spectra": {
+        "nice_name": "%pre Donated spectra",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.donations",
+        "function": "do_donated_spectra",
+        "groups": ["spectra"],
+        "repo": "input/faststars-external",
+        "always_journal": true,
+        "priority": 14
     },
     "final_cleanup": {
         "nice_name": "Cleaning up entries one last time",
