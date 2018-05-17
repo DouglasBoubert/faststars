@@ -1,12 +1,11 @@
 """ Calculate the probability that each star is bound
 """
 import re
-
+import os
 import numpy as np
 from astropy.coordinates import SkyCoord as coord
 import astropy.units as un
 from math import sin, cos, sqrt
-from galpy.potential import MWPotential2014, vesc
 from scipy.stats import beta
 
 from astrocats.catalog.photometry import PHOTOMETRY
@@ -36,6 +35,7 @@ T=T_1*T_2*T_3
 
 errorifmissing = 0.5
 confidenceintervalcoverage = 0.6827
+vescmethod = 'williams2017' # either 'williams2017' or 'galpy'
     
 def best_parameter(PARAMETER):
     nPARAMETER = len(PARAMETER)
@@ -54,6 +54,29 @@ def do_boundprobability(catalog):
     
     task_str = catalog.get_current_task_str()
     keys = list(catalog.entries.keys())
+
+    if vescmethod == 'galpy':
+        from galpy.potential import MWPotential2014, vesc
+    elif vescmethod == 'williams2017':
+        datafile = os.path.join(catalog.get_current_task_repo(),
+                            'spherical_powerlaw.dat')
+        chain = np.genfromtxt(datafile)
+        VESCSOLAR = chain[:,5]
+        ALPHA = chain[:,6]
+        def vescsolar_sampler(NAME,NSAMP):
+            # Set random number generator based on name
+            seed = NAME
+            def craft_seed(SEED):
+                nSEED = len(SEED)
+                # The modulo ensures we don't overrun.
+                indSEED = range(2*(nSEED+3))
+                return np.prod(np.array([ord(SEED[i%nSEED]) for i in indSEED])) % 4294967296
+            np.random.seed(seed=craft_seed(seed))
+            choice_chain = np.random.choice(range(len(VESCSOLAR)),NSAMP)
+            return VESCSOLAR[choice_chain],ALPHA[choice_chain]
+    else:
+        catalog.log.warning('vescmethod was not properly defined, please check.')
+
 
     for oname in pbar(keys, task_str):
         # Some events may be merged in cleanup process, skip them if
@@ -90,6 +113,10 @@ def do_boundprobability(catalog):
             kine_L = 1.35
             kine_k = 3.0
             
+            # Do we have distance prior length scale?
+            if FASTSTARS.DISTANCE_PRIOR_LENGTH_SCALE in catalog.entries[name]:
+                kine_L = float(catalog.entries[name][FASTSTARS.DISTANCE_PRIOR_LENGTH_SCALE][0]['value'])
+                
             # Flags for having proper motions and radial velocities
             haveparallax = False
             havepropermotions = False
@@ -206,8 +233,13 @@ def do_boundprobability(catalog):
             kine_vgrf = np.sqrt(kine_samples_vhel[:,0]**2+kine_samples_vhel[:,1]**2+kine_samples_vhel[:,2]**2)
             
             # Calculate escape velocity
-            kine_galrad = np.sqrt(kine_samples_solar[:,0]**2+(kine_samples_corrected[:,0]*cosb)**2-2.*kine_samples_solar[:,0]*kine_samples_corrected[:,0]*cosb*cosl)
-            kine_vesc = vesc(MWPotential2014,kine_galrad*un.kpc)*kine_samples_solar[:,1]
+            kine_galrad = np.sqrt(kine_samples_solar[:,0]**2+(kine_samples_corrected[:,0])**2-2.*kine_samples_solar[:,0]*kine_samples_corrected[:,0]*cosb*cosl)
+            if vescmethod == 'galpy':
+                kine_vesc = vesc(MWPotential2014,kine_galrad*un.kpc)*kine_samples_solar[:,1]
+            elif vescmethod == 'williams2017':
+                kine_vesc_solar, kine_alpha = vescsolar_sampler(name,kine_samples_n)
+                kine_vesc = kine_vesc_solar*np.power(kine_galrad/kine_samples_solar[:,0],-kine_alpha/2.0)
+            
             
             # Store samples for each star
             if False:
@@ -215,7 +247,7 @@ def do_boundprobability(catalog):
                 kine_samples_output[:,1] /= (k*kine_samples[:,0])
                 kine_samples_output[:,2] /= (k*kine_samples[:,0])
                 #np.savez_compressed('/data/dpb33/GaiaHypervelocity/FastStars/outputpredr2/samples/'+name+'.npz',radec=Mradec,kine_samples_output=kine_samples_output,kine_samples_solar=kine_samples_solar)
-                np.savez_compressed('/data/dpb33/GaiaHypervelocity/WhiteDwarfs/faststaroutput/samplesrcw86/'+name+'.npz',radec=Mradec,kine_samples_output=kine_samples_output,kine_samples_solar=kine_samples_solar,kine_vgrf=kine_vgrf)
+                np.savez_compressed('/data/dpb33/GaiaHypervelocity/FastStars/outputafterdr2_revised/samples_williams/'+name+'.npz',radec=Mradec,kine_samples_output=kine_samples_output,kine_samples_solar=kine_samples_solar,kine_vgrf=kine_vgrf)
                 
 
             

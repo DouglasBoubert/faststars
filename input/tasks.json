@@ -44,15 +44,6 @@
         "groups": ["meta"],
         "priority": 5
     },
-    "sdss": {
-        "nice_name": "Querying against SDSS",
-        "active": true,
-        "update": false,
-        "module": "faststars.tasks.sdss",
-        "function": "do_sdss",
-        "groups": ["meta"],
-        "priority": 6
-    },
     "gaia": {
         "nice_name": "Querying against Gaia",
         "active": false,
@@ -60,7 +51,7 @@
         "module": "faststars.tasks.gaia",
         "function": "do_gaia",
         "groups": ["meta"],
-        "priority": 7
+        "priority": 6
     },
     "gaiaviavizier": {
         "nice_name": "Querying against Gaia via Vizier",
@@ -68,6 +59,24 @@
         "update": false,
         "module": "faststars.tasks.gaiaviavizier",
         "function": "do_gaiaviavizier",
+        "groups": ["meta"],
+        "priority": 6
+    },
+    "gaiaviatap": {
+        "nice_name": "Querying against Gaia via Tap",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.gaiaviatap",
+        "function": "do_gaiaviatap",
+        "groups": ["meta"],
+        "priority": 7
+    },
+    "sdss": {
+        "nice_name": "Querying against SDSS",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.sdss",
+        "function": "do_sdss",
         "groups": ["meta"],
         "priority": 8
     },
@@ -105,6 +114,7 @@
         "module": "faststars.tasks.boundprobability",
         "function": "do_boundprobability",
         "groups": ["meta"],
+        "repo": "input/faststars-external/AUXILIARY",
         "priority": 12
     },
     "final_cleanup": {

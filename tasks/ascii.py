@@ -690,7 +690,10 @@ def do_ascii(catalog):
             for SC in stellarclass:
                 catalog.entries[name].add_quantity(
                     FASTSTARS.STELLAR_CLASS, SC, source=source)
-                    
+    catalog.journal_entries()
+    return
+    
+def holding():                    
     # 2018arXiv180410607M
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
                             'marchetti2018.txt')
@@ -710,23 +713,6 @@ def do_ascii(catalog):
             FASTSTARS.RA, ra, source=source)
         catalog.entries[name].add_quantity(
             FASTSTARS.DEC, dec, source=source)
-        #catalog.entries[name].add_quantity(
-        #        FASTSTARS.VELOCITY, str(row['HRV']), e_value=str(row['e_HRV']), source=source)
-        #catalog.entries[name].add_quantity(
-        #    FASTSTARS.LUM_DIST, str(float(str(row['d']))/1e3), e_lower_value=str(float(str(row['e_low_d']))/1e3), e_upper_value=str(float(str(row['e_upp_d']))/1e3), u_value='kpc', source=source)
-        
-        #if str(row['dspec'])!='--':
-        #    catalog.entries[name].add_quantity(
-        #        FASTSTARS.LUM_DIST, str(float(str(row['dspec']))/1e3), e_value=str(float(str(row['e_dspec']))/1e3), u_value='kpc', source=source)
-        #sptype = str(row['SpectralType'])
-        #if sptype != '--':
-        #    catalog.entries[name].add_quantity(
-        #        FASTSTARS.SPECTRAL_TYPE, sptype, source=source)
-        #stellarclass = str(row['StellarClass']).split('/')
-        #if str(row['StellarClass'])!='--':
-        #    for SC in stellarclass:
-        #        catalog.entries[name].add_quantity(
-        #            FASTSTARS.STELLAR_CLASS, SC, source=source)
         
     # 2018arXiv180503194H
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII','hattori2018.csv')
@@ -741,5 +727,4 @@ def do_ascii(catalog):
         if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Kohei Hattori, Monica Valluri, Eric F. Bell, Ian U. Roederer', source)
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2018), source)
-    catalog.journal_entries()
-    return
+

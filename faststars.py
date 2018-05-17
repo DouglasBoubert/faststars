@@ -39,6 +39,7 @@ class FASTSTARS(ENTRY):
     VELOCITY = Key('velocity',KEY_TYPES.NUMERIC)
     ERRORS = Key('errors')
     LUM_DIST = Key('lumdist',KEY_TYPES.NUMERIC,replace_better=True)
+    DISTANCE_PRIOR_LENGTH_SCALE = Key('distancepriorlengthscale',KEY_TYPES.NUMERIC)
 
 
 class FastStars(Entry):
