@@ -691,9 +691,9 @@ def do_ascii(catalog):
                 catalog.entries[name].add_quantity(
                     FASTSTARS.STELLAR_CLASS, SC, source=source)
     catalog.journal_entries()
-    return
+#    return
     
-def holding():                    
+#def holding():                    
     # 2018arXiv180410607M
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
                             'marchetti2018.txt')
