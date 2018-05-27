@@ -53,7 +53,7 @@
         "groups": ["meta"],
         "priority": 6
     },
-    "gaiaviavizier": {
+    "gaiaviavizie": {
         "nice_name": "Querying against Gaia via Vizier",
         "active": true,
         "update": false,
@@ -113,6 +113,16 @@
         "update": false,
         "module": "faststars.tasks.lamost",
         "function": "do_lamost",
+        "groups": ["meta"],
+        "repo": "input/faststars-external",
+        "priority": 12
+    },
+    "sdss_spectra": {
+        "nice_name": "Querying for spectra in SDSS",
+        "active": true,
+        "update": false,
+        "module": "faststars.tasks.sdss_spectra",
+        "function": "do_sdss_spectra",
         "groups": ["meta"],
         "repo": "input/faststars-external",
         "priority": 12

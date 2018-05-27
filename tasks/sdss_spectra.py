@@ -6,17 +6,18 @@ import astropy.coordinates as coord
 import astropy.units as un
 import astropy.constants as con
 import requests
+from astroquery.sdss import SDSS
+
 from astrocats.catalog.spectrum import SPECTRUM
 from astrocats.catalog.photometry import PHOTOMETRY
 from astrocats.catalog.utils import jd_to_mjd, pbar, is_number, pretty_num
 from astropy.io import fits
 from astropy.time import Time as astrotime
-from astroquery.vizier import Vizier
 
 from ..faststars import FASTSTARS
 
 
-def do_lamost(catalog):
+def do_sdss_spectra(catalog):
     """Import spectra from LAMOST."""
     task_str = catalog.get_current_task_str()
 
@@ -24,12 +25,10 @@ def do_lamost(catalog):
     # sanitize some fields
     keys = list(catalog.entries.keys())
 
-    viz = Vizier(columns=["**"])
-
-    fureps = {'erg/cm2/s/A': 'erg/s/cm^2/Angstrom'}
+    fureps = {'erg/cm2/s/A': 'erg/s/cm^2/Angstrom', '1E-17 erg/cm^2/s/Ang':'erg/s/cm^2/Angstrom'}
 
     c_kms = con.c.cgs.value / 1.0e5
-
+    cntsdss = 0
     for oname in pbar(keys, task_str):
         # Some events may be merged in cleanup process, skip them if
         # non-existent.
@@ -38,42 +37,81 @@ def do_lamost(catalog):
                 FASTSTARS.DEC not in catalog.entries[oname]):
             continue
         else:
-            result = viz.query_region(
-                coord.SkyCoord(
+            xid = SDSS.query_region(coord.SkyCoord(
                     ra=catalog.entries[oname][FASTSTARS.RA][0]['value'],
                     dec=catalog.entries[oname][FASTSTARS.DEC][0]['value'],
-                    unit=(un.hourangle, un.deg), frame='icrs'),
-                width="2s",
-                catalog="V/149/dr2")
-
-            if not result.keys():
+                    unit=(un.hourangle, un.deg), frame='icrs'), spectro=True)
+            #xid = SDSS.query_region(coord.SkyCoord(
+            #        ra='14:34:06.17',
+            #        dec='+56:30:47.24',
+            #        unit=(un.hourangle, un.deg), frame='icrs'), spectro=True)
+            if xid==None:
                 continue
-            tab = result['V/149/dr2']
+            while len(xid)>1:
+                notstar = xid['z'].argmax()
+                xid.remove_row(notstar)
+            print(xid)
 
-            star = None
-            for row in tab:
-                if (row['objType'] == 'Star' and
-                        row['Class'].lower() in ['star', 'unknown']):
-                    star = row
-                    break
-            if not star:
-                continue
+            #star = None
+            #for row in tab:
+            #    if (row['objType'] == 'Star' and
+            #            row['Class'].lower() in ['star', 'unknown']):
+            #        star = row
+            #        break
+            #if not star:
+            #    continue
 
             try:
                 name, source = catalog.new_entry(
-                    oname, bibcode='2016yCat.5149....0L', srcname='LAMOST',
-                    url='http://dr3.lamost.org/')
+                    oname, bibcode='2015ApJS..219...12A', srcname='SDSS',
+                    url='http://www.sdss.org/')
             except Exception:
                 catalog.log.warning(
                     '"{}" was not found, suggests merge occurred in cleanup '
                     'process.'.format(oname))
                 continue
+                
+            
 
-            if row['SubClass'] is not 'Non':
-                #catalog.entries[name].add_quantity(
-                #    FASTSTARS.SPECTRAL_TYPE, row['SubClass'], source=source)
-                    
-                ST, SCfull = row['SubClass'][:2],row['SubClass'][2:]
+            ffile = ('spec-'+str(xid['specobjid'][0])+'.fits.gz')
+
+            #furl = 'http://dr3.lamost.org/sas/fits/' + vname + '/' + ffile
+
+            datafile = os.path.join(
+                catalog.get_current_task_repo(), 'SDSS', ffile)
+
+            if not os.path.exists(datafile):
+                ### Download spectra
+                sp = SDSS.get_spectra(matches=xid)[0]
+                
+                ### Identify star
+                #assert sp[2].data['class'][0]=='STAR'
+                
+                ### Write spectra
+                #print(catalog.entries[oname][FASTSTARS.RA][0]['value'],catalog.entries[oname][FASTSTARS.DEC][0]['value'])
+                sp.writeto(datafile,overwrite=True)
+                #open(datafile, 'wb').write(fr.content)
+            
+            ### Open spectra
+            hdulist = fits.open(datafile)
+                
+            ### sp contains a list of fits datafiles, identify main one
+            i_primary = 0
+            i_coadd = 1
+            i_specobj = 2
+            assert hdulist[i_primary].name == 'PRIMARY'
+            assert hdulist[i_coadd].name == 'COADD'
+            assert (hdulist[i_specobj].name == 'SPECOBJ' or hdulist[i_specobj].name == 'SPALL')
+            
+            #xid = SDSS.query_region(coord.SkyCoord(
+            #     ra='12:11:50.27',
+            #     dec='+14:37:16.2',
+            #     unit=(un.hourangle, un.deg), frame='icrs'), spectro=True)
+            
+            ### from SPECOBJ
+            #print('.'+hdulist[i_specobj].data['ELODIE_SPTYPE'][0]+'.')
+            if hdulist[i_specobj].data['ELODIE_SPTYPE'][0] != 'unknown':
+                ST, SCfull = hdulist[i_specobj].data['ELODIE_SPTYPE'][0][:2],hdulist[i_specobj].data['ELODIE_SPTYPE'][0][2:]
                 if len(SCfull) > 0:
                     if 'IV' in SCfull:
                         SC = 'sg'
@@ -83,71 +121,26 @@ def do_lamost(catalog):
                         SC = 'd'
                     elif 'I' in SCfull:
                         SC = 'Sg'
-                    catalog.entries[name].add_quantity(
-                        FASTSTARS.STELLAR_CLASS, SC, source=source)
+                    else:
+                        SC = False
+                    if SC != False:
+                        catalog.entries[name].add_quantity(
+                            FASTSTARS.STELLAR_CLASS, SC, source=source)
                 catalog.entries[name].add_quantity(
                     FASTSTARS.SPECTRAL_TYPE, ST, source=source)
-                
-
-            if row['z'] and is_number(row['z']):
+                    
+            if hdulist[i_specobj].data['Z'][0] != 0.0:
                 catalog.entries[name].add_quantity(
-                    FASTSTARS.REDSHIFT, str(row['z']), e_value=str(row['e_z']),
+                    FASTSTARS.REDSHIFT, str(hdulist[i_specobj].data['Z'][0]), e_value=str(hdulist[i_specobj].data['Z_ERR'][0]),
                     source=source)
                 catalog.entries[name].add_quantity(
                     FASTSTARS.VELOCITY,
-                    pretty_num(float(row['z']) * c_kms, sig=5),
-                    e_value=pretty_num(float(row['e_z'] * c_kms), sig=5),
+                    pretty_num(float(hdulist[i_specobj].data['Z'][0]) * c_kms, sig=5),
+                    e_value=pretty_num(float(hdulist[i_specobj].data['Z_ERR'][0] * c_kms), sig=5),
                     source=source)
+                
 
-            mag_types = list(row['magType'].replace('psf_', ''))
-
-            nmt = []
-            nmi = 0
-            for mt in mag_types:
-                if is_number(mt):
-                    nmt[nmi - 1] += mt
-                else:
-                    nmt += mt
-                    nmi += 1
-            mag_types = [x.upper() if x in [
-                'b', 'v', 'j', 'h'] else x for x in nmt]
-
-            for mi, mt in enumerate(mag_types):
-                snrf = 'snr' + mt.lower()
-                if snrf in row.columns and float(row[snrf]) < 3:
-                    continue
-                photodict = {
-                    PHOTOMETRY.TIME: str(row['MJD']),
-                    PHOTOMETRY.U_TIME: 'MJD',
-                    PHOTOMETRY.BAND: mt,
-                    PHOTOMETRY.TELESCOPE: 'LAMOST',
-                    PHOTOMETRY.MAGNITUDE: str(row['mag' + str(mi + 1)]),
-                    PHOTOMETRY.SOURCE: source
-                }
-                if snrf in row.columns:
-                    photodict[PHOTOMETRY.E_MAGNITUDE] = str(
-                        Decimal('2.5') *
-                        (Decimal('1') + Decimal('1') /
-                         Decimal(str(row[snrf]))).log10())[:5]
-                catalog.entries[name].add_photometry(**photodict)
-
-            vname = row['PlanId']
-
-            ffile = ('spec-' +
-                     row['LMJD'] + '-' + vname + '_sp' + row['spId'] + '-' +
-                     row['FiberId'] + '.fits.gz')
-
-            furl = 'http://dr3.lamost.org/sas/fits/' + vname + '/' + ffile
-
-            datafile = os.path.join(
-                catalog.get_current_task_repo(), 'LAMOST', ffile)
-
-            if not os.path.exists(datafile):
-                fr = requests.get(furl)
-
-                open(datafile, 'wb').write(fr.content)
-
-            hdulist = fits.open(datafile)
+            
             for oi, obj in enumerate(hdulist[0].header):
                 if any(x in ['.', '/'] for x in obj):
                     del (hdulist[0].header[oi])
@@ -170,9 +163,9 @@ def do_lamost(catalog):
                     mjd = str(astrotime(dateobs, format='isot').mjd)
                 else:
                     raise ValueError("Couldn't find JD/MJD for spectrum.")
-                if hdulist[0].header['NAXIS'] == 2:
-                    waves = [str(x) for x in list(hdulist[0].data)[2]]
-                    fluxes = [str(x) for x in list(hdulist[0].data)[0]]
+                if hdulist[i_coadd].header['NAXIS'] == 2:
+                    waves = [str(x) for x in list(hdulist[i_coadd].data['wdisp'])]
+                    fluxes = [str(x) for x in list(hdulist[i_coadd].data['flux'])]
                 else:
                     print('Warning: Skipping FITS spectrum `{}`.'.format(
                         datafile))
@@ -183,6 +176,8 @@ def do_lamost(catalog):
                 fluxunit = hdulist[0].header['BUNIT']
                 if fluxunit in fureps:
                     fluxunit = fureps[fluxunit]
+                if fluxunit[:3] == '1E-17':
+                    fluxes = [str(x*1e-17) for x in list(hdulist[i_coadd].data['flux'])]
             else:
                 if max([float(x) for x in fluxes]) < 1.0e-5:
                     fluxunit = 'erg/s/cm^2/Angstrom'
@@ -211,7 +206,9 @@ def do_lamost(catalog):
             if 'AIRMASS' in hdrkeys:
                 specdict[SPECTRUM.AIRMASS] = hdulist[0].header['AIRMASS']
             catalog.entries[name].add_spectrum(**specdict)
+            cntsdss+=1
             hdulist.close()
             catalog.journal_entries()
-
+    print('`{}` have SDSS spectra.'.format(
+                        cntsdss))
     return

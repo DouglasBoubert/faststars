@@ -246,8 +246,8 @@ def do_boundprobability(catalog):
                 kine_samples_output = np.copy(kine_samples_corrected)
                 kine_samples_output[:,1] /= (k*kine_samples[:,0])
                 kine_samples_output[:,2] /= (k*kine_samples[:,0])
-                #np.savez_compressed('/data/dpb33/GaiaHypervelocity/FastStars/outputpredr2/samples/'+name+'.npz',radec=Mradec,kine_samples_output=kine_samples_output,kine_samples_solar=kine_samples_solar)
-                np.savez_compressed('/data/dpb33/GaiaHypervelocity/FastStars/outputafterdr2_revised/samples_williams/'+name+'.npz',radec=Mradec,kine_samples_output=kine_samples_output,kine_samples_solar=kine_samples_solar,kine_vgrf=kine_vgrf)
+                np.savez_compressed('/data/dpb33/GaiaHypervelocity/FastStars/outputpredr2_revised/williams_and_bailer/samples/'+name+'.npz',radec=Mradec,kine_samples_output=kine_samples_output,kine_samples_solar=kine_samples_solar,kine_vgrf=kine_vgrf)
+                #np.savez_compressed('/data/dpb33/GaiaHypervelocity/WhiteDwarfs/mainsequence/samples/'+name+'.npz',radec=Mradec,kine_samples_output=kine_samples_output,kine_samples_solar=kine_samples_solar,kine_vgrf=kine_vgrf)
                 
 
             
