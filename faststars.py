@@ -24,12 +24,9 @@ class FASTSTARS(ENTRY):
     """FastStars `Key` child class."""
     DISCOVER_DATE = Key('discoverdate', KEY_TYPES.STRING)
     DISCOVERER = Key('discoverer', KEY_TYPES.STRING)
-    PROPER_MOTION_RA = Key('propermotionra', KEY_TYPES.NUMERIC,
-        replace_better=True)
-    PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC,
-        replace_better=True)
-    PARALLAX = Key('parallax', KEY_TYPES.NUMERIC,
-        replace_better=True)
+    PROPER_MOTION_RA = Key('propermotionra', KEY_TYPES.NUMERIC)
+    PROPER_MOTION_DEC = Key('propermotiondec', KEY_TYPES.NUMERIC)
+    PARALLAX = Key('parallax', KEY_TYPES.NUMERIC)
     MASS = Key('mass', KEY_TYPES.NUMERIC)
     LOGG = Key('logg', KEY_TYPES.NUMERIC)
     TEFF = Key('teff', KEY_TYPES.NUMERIC)

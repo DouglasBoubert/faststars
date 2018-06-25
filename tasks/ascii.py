@@ -690,7 +690,7 @@ def do_ascii(catalog):
             for SC in stellarclass:
                 catalog.entries[name].add_quantity(
                     FASTSTARS.STELLAR_CLASS, SC, source=source)
-    catalog.journal_entries()
+    
 #    return
     
 #def holding():                    
@@ -727,4 +727,18 @@ def do_ascii(catalog):
         if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Kohei Hattori, Monica Valluri, Eric F. Bell, Ian U. Roederer', source)
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2018), source)
+            
+    # 2018arXiv180608630I
+    ### Has teff, mass, logg, radii, etc.
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII','irrgang2018.csv')
+    data = read(datafile)
+    for row in pbar(data, task_str):
+        oname = str(row['id'])
+        name, source = catalog.new_entry(oname, bibcode='2018arXiv180608630I')
+        alias = str(row['catalog'])
+        catalog.entries[name].add_quantity(FASTSTARS.ALIAS, alias, source=source)
+        catalog.entries[name].add_quantity(FASTSTARS.VELOCITY, str(row['vrad']), e_lower_value=str(row['e_vrad_low']/2.576), e_upper_value=str(row['e_vrad_upp']/2.576), source=source, u_value='km/s')
+        catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(row['dist']), e_lower_value=str(row['e_dist_low_1sig']), e_upper_value=str(row['e_dist_upp_1sig']), source=source, u_value='kpc')
+    
+    catalog.journal_entries()
 
