@@ -47,7 +47,8 @@ def best_parameter(PARAMETER):
             errPARAMETER[i] = float(PARAMETER[i][QUANTITY.E_VALUE])
         elif (QUANTITY.E_LOWER_VALUE in PARAMETER[i] and QUANTITY.E_UPPER_VALUE in PARAMETER[i]):
             errPARAMETER[i] = max(float(PARAMETER[i][QUANTITY.E_LOWER_VALUE]),float(PARAMETER[i][QUANTITY.E_UPPER_VALUE]))
-    return np.argmin(errPARAMETER)
+    BESTI = np.argmin(errPARAMETER)
+    return BESTI, errPARAMETER[BESTI]
     
 
 def do_boundprobability(catalog):
@@ -144,25 +145,29 @@ def do_boundprobability(catalog):
             if (FASTSTARS.PROPER_MOTION_RA in catalog.entries[name] and FASTSTARS.PROPER_MOTION_DEC in catalog.entries[name]):
                 # Yes.
                 havepropermotions = True
-                kine_values[1] = float(catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][0]['value'])
-                kine_values[2] = float(catalog.entries[name][FASTSTARS.PROPER_MOTION_DEC][0]['value'])
+                best_propermotion_i = best_parameter(catalog.entries[name][FASTSTARS.PROPER_MOTION_RA])[0]
+                kine_values[1] = float(catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][best_propermotion_i]['value'])
+                kine_values[2] = float(catalog.entries[name][FASTSTARS.PROPER_MOTION_DEC][best_propermotion_i]['value'])
                 
                 # Do the proper motions have errors?
-                if (QUANTITY.E_VALUE in catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][0] and QUANTITY.E_VALUE in catalog.entries[name][FASTSTARS.PROPER_MOTION_DEC][0]):
-                    kine_errors[1] = float(catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][0]['e_value'])
-                    kine_errors[2] = float(catalog.entries[name][FASTSTARS.PROPER_MOTION_DEC][0]['e_value'])
+                if (QUANTITY.E_VALUE in catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][best_propermotion_i] and QUANTITY.E_VALUE in catalog.entries[name][FASTSTARS.PROPER_MOTION_DEC][best_propermotion_i]):
+                    kine_errors[1] = float(catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][best_propermotion_i]['e_value'])
+                    kine_errors[2] = float(catalog.entries[name][FASTSTARS.PROPER_MOTION_DEC][best_propermotion_i]['e_value'])
                 else:
                     kine_errors[1] = errorifmissing * kine_values[1]
                     kine_errors[2] = errorifmissing * kine_values[2]
                   
                 # Are the proper motions correlated?
-                if (QUANTITY.CORRELATIONS in catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][0] and QUANTITY.CORRELATIONS in catalog.entries[name][FASTSTARS.PROPER_MOTION_DEC][0]):
+                if (QUANTITY.CORRELATIONS in catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][best_propermotion_i] and QUANTITY.CORRELATIONS in catalog.entries[name][FASTSTARS.PROPER_MOTION_DEC][best_propermotion_i]):
                     # Yes. Loop through correlations.
-                    propermotionra_corr = catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][0]['correlations']
+                    propermotionra_corr = catalog.entries[name][FASTSTARS.PROPER_MOTION_RA][best_propermotion_i]['correlations']
                     n_corr = len(propermotionra_corr)
                     for i in range(n_corr):
                         if propermotionra_corr[i]['quantity'] == 'propermotiondec':
                             kine_corr[1,2] = kine_corr[2,1] = float(propermotionra_corr[i]['value'])
+                else:
+                    # No. Reset correlations with parallax.
+                    kine_corr[0,1] = kine_corr[1,0] = kine_corr[0,2] = kine_corr[2,0] = 0.0
                         
             # Do we have a radial velocity?
             if FASTSTARS.VELOCITY in catalog.entries[name]:
@@ -170,12 +175,14 @@ def do_boundprobability(catalog):
                 havevelocities = True
                 
                 # What is the best radial velocity?
-                best_velocity_i = best_parameter(catalog.entries[name][FASTSTARS.VELOCITY])
+                best_velocity_i,best_velocity_err = best_parameter(catalog.entries[name][FASTSTARS.VELOCITY])
                 kine_values[3] = float(catalog.entries[name][FASTSTARS.VELOCITY][best_velocity_i]['value'])
                 
                 # Does the radial velocity have an error?
-                if QUANTITY.E_VALUE in catalog.entries[name][FASTSTARS.VELOCITY][best_velocity_i]:
-                    kine_errors[3] = float(catalog.entries[name][FASTSTARS.VELOCITY][best_velocity_i]['e_value'])
+                #if QUANTITY.E_VALUE in catalog.entries[name][FASTSTARS.VELOCITY][best_velocity_i]:
+                    #kine_errors[3] = float(catalog.entries[name][FASTSTARS.VELOCITY][best_velocity_i]['e_value'])
+                if best_velocity_err < 9999.0:
+                    kine_errors[3] = best_velocity_err
                 else:
                     kine_errors[3] = errorifmissing * kine_values[3]
             
@@ -184,12 +191,14 @@ def do_boundprobability(catalog):
                 # Yes.
                 
                 # What is the best photometric distance?
-                best_lumdist_i = best_parameter(catalog.entries[name][FASTSTARS.LUM_DIST])
+                best_lumdist_i, best_lumdist_err = best_parameter(catalog.entries[name][FASTSTARS.LUM_DIST])
                 kine_mu = float(catalog.entries[name][FASTSTARS.LUM_DIST][best_lumdist_i]['value'])
                 
                 # Does the photometric distance have an error?
-                if QUANTITY.E_VALUE in catalog.entries[name][FASTSTARS.LUM_DIST][best_lumdist_i]:
-                    kine_sigma = float(catalog.entries[name][FASTSTARS.LUM_DIST][best_lumdist_i]['e_value'])
+                #if QUANTITY.E_VALUE in catalog.entries[name][FASTSTARS.LUM_DIST][best_lumdist_i]:
+                #    kine_sigma = float(catalog.entries[name][FASTSTARS.LUM_DIST][best_lumdist_i]['e_value'])
+                if best_lumdist_err < 9999.0:
+                    kine_sigma = best_lumdist_err
                 else:
                     kine_sigma = errorifmissing * kine_mu
                     
