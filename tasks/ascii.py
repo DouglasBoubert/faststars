@@ -27,6 +27,29 @@ def do_ascii(catalog):
     """Process ASCII files extracted from datatables of published works."""
     task_str = catalog.get_current_task_str()
 
+    # 2018arXiv180700427D
+    ### Has teff, logg, some abundances
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII','du2018.csv')
+    data = read(datafile)
+    for row in pbar(data, task_str):
+        oname = str(row['name'])
+        name, source = catalog.new_entry(oname, bibcode='2018arXiv180700427D')
+        lgname = 'Gaia DR1 '+str(row['source_id']).strip(' ')
+        sgname = 'Gaia DR1 '+str(row['source_id']).strip(' ')[:6]
+        catalog.entries[name].add_quantity(FASTSTARS.ALIAS, lgname, source=source)
+        catalog.entries[name].add_quantity(FASTSTARS.ALIAS, sgname, source=source)
+        catalog.entries[name].add_quantity(FASTSTARS.VELOCITY, str(row['hrv']), e_value=str(row['hrv_error']), source=source, u_value='km/s')
+        catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(float(row['dhel'])/1e3), e_value=str(float(row['dhel_error'])/1e3), source=source, u_value='kpc')
+        if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Cuihua Du, Hefan Li, Shuai Liu, Thomas Donlon, Heidi Jo Newberg', source)
+            catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2018), source)
+    
+    #catalog.journal_entries()
+
+#    return
+    
+#def holding():     
+
     # 2007ApJ...660..311B
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
                             'ApJ_660_311_table1.csv')
@@ -691,9 +714,7 @@ def do_ascii(catalog):
                 catalog.entries[name].add_quantity(
                     FASTSTARS.STELLAR_CLASS, SC, source=source)
     
-#    return
-    
-#def holding():                    
+               
     # 2018arXiv180410607M
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
                             'marchetti2018.txt')
@@ -741,4 +762,6 @@ def do_ascii(catalog):
         catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(row['dist']), e_lower_value=str(row['e_dist_low_1sig']), e_upper_value=str(row['e_dist_upp_1sig']), source=source, u_value='kpc')
     
     catalog.journal_entries()
+    
+    return
 

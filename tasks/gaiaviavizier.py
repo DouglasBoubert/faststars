@@ -66,19 +66,21 @@ def do_gaiaviavizier(catalog):
                 'process.'.format(oname))
             continue
         
-        ### Check if has DR2 ID
-        dr2id = ''
+        ### Check if has DR1 or DR2 ID
+        gaiaid = ''
         for alias in catalog.entries[name][FASTSTARS.ALIAS]:
-            if alias['value'][:8] == 'Gaia DR2' and len(alias['value'])>len(dr2id):
-                dr2id = alias['value']
-        hasdr2id = True if len(dr2id)>0 else False
+            if alias['value'][:8] == 'Gaia DR2' and len(alias['value'])>len(gaiaid):
+                gaiaid = alias['value']
+            elif alias['value'][:8] == 'Gaia DR1' and len(alias['value'])>len(gaiaid):
+                gaiaid = alias['value']
+        hasgaiaid = True if len(gaiaid)>0 else False
         
         if (FASTSTARS.RA not in catalog.entries[name] or
-                FASTSTARS.DEC not in catalog.entries[name]) and not hasdr2id:
+                FASTSTARS.DEC not in catalog.entries[name]) and not hasgaiaid:
             continue
         else:
-            if hasdr2id:
-                result = silentgaiaobjectquery(dr2id, radius=un.Quantity(10.0, un.arcsecond), catalog='I/345/gaia2')
+            if hasgaiaid:
+                result = silentgaiaobjectquery(gaiaid, radius=un.Quantity(10.0, un.arcsecond), catalog='I/345/gaia2')
                 if len(result)<1:
                     catalog.log.warning(
                 '"{}" should really have had a cross-match.'.format(name))
@@ -134,7 +136,7 @@ def do_gaiaviavizier(catalog):
                         magnitude=gtab('RPmag'),
                         e_magnitude=gtab('e_RPmag'),
                         source=source)
-                if not hasdr2id: catalog.entries[name].add_quantity(FASTSTARS.ALIAS, gtab('DR2Name'), source=source)
+                if not hasgaiaid: catalog.entries[name].add_quantity(FASTSTARS.ALIAS, gtab('DR2Name'), source=source)
                 gra,gde = coord(ra=float(gtab('RA_ICRS'))*un.deg,dec=float(gtab('DE_ICRS'))*un.deg,frame='icrs').to_string('hmsdms', sep=':').split()
                 if gtab('Plx') == '--':
                     catalog.entries[name].add_quantity(FASTSTARS.RA,gra, source, e_value=gtab('e_RA_ICRS'), u_e_value='mas', correlations=[{CORRELATION.VALUE:gtab('RADEcor'), CORRELATION.QUANTITY:FASTSTARS.DEC, CORRELATION.KIND:'Pearson'}])
