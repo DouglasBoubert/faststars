@@ -27,6 +27,32 @@ def do_ascii(catalog):
     """Process ASCII files extracted from datatables of published works."""
     task_str = catalog.get_current_task_str()
 
+    # 2017MNRAS.466.3077M
+    ### Has teff, logg, some abundances
+    datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII','bidin2016.csv')
+    data = read(datafile)
+    for row in pbar(data, task_str):
+        # disable this when LMC potential is in.
+        if str(row['shortid']) in ['390','403']:
+            oname = 'MoniBidin'+str(row['shortid'])
+            name, source = catalog.new_entry(oname, bibcode='2017MNRAS.466.3077M')
+            sourcedinescu = catalog.entries[name].add_source(bibcode='2018arXiv180702028C')
+            lgname = 'Gaia DR2 '+str(row['gaiadr2']).strip(' ')
+            sgname = 'Gaia DR2 '+str(row['gaiadr2']).strip(' ')[:6]
+            catalog.entries[name].add_quantity(FASTSTARS.ALIAS, lgname, source=sourcedinescu)
+            catalog.entries[name].add_quantity(FASTSTARS.ALIAS, sgname, source=sourcedinescu)
+            catalog.entries[name].add_quantity(FASTSTARS.VELOCITY, str(row['rv']), e_value=str(row['rv_error']), source=source, u_value='km/s')
+            catalog.entries[name].add_quantity(FASTSTARS.LUM_DIST, str(row['dist']), e_lower_value=str(row['dist_error_low']), e_upper_value=str(row['dist_error_high']), source=source, u_value='kpc')
+            if (FASTSTARS.DISCOVERER not in catalog.entries[name]):
+                catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'C. Moni Bidin, D. I. Casetti-Dinescu, T. M. Girard, L. Zhang, R. A. Méndez, K. Vieira, V. I. Korchagin, W. F. van Altena', source)
+                catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2018), source)
+
+    catalog.journal_entries()
+
+    return
+    
+def holding():   
+
     # 2018arXiv180700427D
     ### Has teff, logg, some abundances
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII','du2018.csv')
@@ -44,11 +70,7 @@ def do_ascii(catalog):
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'Cuihua Du, Hefan Li, Shuai Liu, Thomas Donlon, Heidi Jo Newberg', source)
             catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2018), source)
     
-    #catalog.journal_entries()
-
-#    return
-    
-#def holding():     
+  
 
     # 2007ApJ...660..311B
     datafile = os.path.join(catalog.get_current_task_repo(), 'ASCII',
