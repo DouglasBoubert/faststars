@@ -47,11 +47,11 @@ def do_ascii(catalog):
                 catalog.entries[name].add_quantity(FASTSTARS.DISCOVERER,'C. Moni Bidin, D. I. Casetti-Dinescu, T. M. Girard, L. Zhang, R. A. Méndez, K. Vieira, V. I. Korchagin, W. F. van Altena', source)
                 catalog.entries[name].add_quantity(FASTSTARS.DISCOVER_DATE,str(2018), source)
 
-    catalog.journal_entries()
+#    catalog.journal_entries()
 
-    return
+#    return
     
-def holding():   
+#def holding():   
 
     # 2018arXiv180700427D
     ### Has teff, logg, some abundances
