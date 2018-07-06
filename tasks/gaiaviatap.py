@@ -79,7 +79,7 @@ def do_gaiaviatap(catalog):
             if alias['value'][:8] == 'Gaia DR2' and len(alias['value'])>len(dr2id):
                 dr2id = alias['value']
         if len(dr2id)<8 or FASTSTARS.PARALLAX not in catalog.entries[name]:
-            print(name)
+            #print(name)
             continue
         else:
             with HiddenPrints():
